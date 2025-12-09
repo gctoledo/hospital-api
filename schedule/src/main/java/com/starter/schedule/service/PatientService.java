@@ -9,4 +9,5 @@ public interface PatientService {
     PatientResponse findById(Long id);
     List<PatientResponse> findAll();
     PatientResponse create(PatientRequest request);
+    PatientResponse update(Long id, PatientRequest request);
 }

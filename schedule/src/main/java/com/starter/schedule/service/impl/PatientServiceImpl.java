@@ -56,4 +56,25 @@ public class PatientServiceImpl implements PatientService {
 
         return PatientMapper.toResponse(savedPatient);
     }
+
+    @Override
+    @Transactional
+    public PatientResponse update(Long id, PatientRequest request) {
+        var patient = patientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
+
+        if (patientRepository.existsByCpf(request.cpf()) && !patient.getCpf().equals(request.cpf())) {
+            throw new ConflictException("CPF já existe");
+        }
+
+        patient.setName(request.name());
+        patient.setCpf(request.cpf());
+        patient.setBirthDate(request.birthDate());
+        patient.setGender(request.gender());
+        patient.setPhone(request.phone());
+
+        var savedPatient = patientRepository.save(patient);
+
+        return PatientMapper.toResponse(savedPatient);
+    }
 }

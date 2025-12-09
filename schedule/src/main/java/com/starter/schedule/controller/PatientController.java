@@ -38,4 +38,11 @@ public class PatientController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientResponse> update(@PathVariable Long id, @Valid @RequestBody PatientRequest request) {
+        var response = patientService.update(id, request);
+
+        return ResponseEntity.ok(response);
+    }
 }
