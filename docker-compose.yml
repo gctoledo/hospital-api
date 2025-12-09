@@ -12,6 +12,11 @@ services:
       - "15672:15672"
     networks:
       - hospital-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   schedule-db:
     image: mysql:8.0
@@ -63,6 +68,95 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  schedule:
+    build:
+      context: ./schedule
+      dockerfile: Dockerfile
+    container_name: schedule-service
+    environment:
+      SERVER_PORT: 8083
+      DATASOURCE_URL: jdbc:mysql://schedule-db:3306/schedule_db?createDatabaseIfNotExist=true
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD: root
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    ports:
+      - "8083:8083"
+    networks:
+      - hospital-network
+    depends_on:
+      schedule-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  clinic:
+    build:
+      context: ./clinic
+      dockerfile: Dockerfile
+    container_name: clinic-service
+    environment:
+      SERVER_PORT: 8081
+      DATASOURCE_URL: jdbc:mysql://clinic-db:3306/clinic_db?createDatabaseIfNotExist=true
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD: root
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    ports:
+      - "8081:8081"
+    networks:
+      - hospital-network
+    depends_on:
+      clinic-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  procedures:
+    build:
+      context: ./procedures
+      dockerfile: Dockerfile
+    container_name: procedures-service
+    environment:
+      SERVER_PORT: 8082
+      DATASOURCE_URL: jdbc:mysql://procedures-db:3306/procedures_db?createDatabaseIfNotExist=true
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD: root
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    ports:
+      - "8082:8082"
+    networks:
+      - hospital-network
+    depends_on:
+      procedures-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    environment:
+      SERVER_PORT: 8080
+      SCHEDULE_SERVICE_URL: http://schedule:8083
+    ports:
+      - "8080:8080"
+    networks:
+      - hospital-network
+    depends_on:
+      - schedule
+      - clinic
+      - procedures
 
 volumes:
   mysql_procedures_data:
