@@ -7,10 +7,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/patients")
@@ -18,6 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class PatientController {
 
     private final PatientService patientService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PatientResponse> findById(@PathVariable Long id) {
+        var response = patientService.findById(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PatientResponse>> findAll() {
+        var response = patientService.findAll();
+
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     public ResponseEntity<PatientResponse> create(@Valid @RequestBody PatientRequest request) {
