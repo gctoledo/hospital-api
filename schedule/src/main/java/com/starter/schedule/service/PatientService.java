@@ -10,4 +10,5 @@ public interface PatientService {
     List<PatientResponse> findAll();
     PatientResponse create(PatientRequest request);
     PatientResponse update(Long id, PatientRequest request);
+    void delete(Long id);
 }
