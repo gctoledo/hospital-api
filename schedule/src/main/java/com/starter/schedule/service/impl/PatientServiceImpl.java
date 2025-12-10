@@ -19,13 +19,14 @@ import java.util.List;
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
 
     @Override
     public PatientResponse findById(Long id) {
         var patient = patientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
 
-        return PatientMapper.toResponse(patient);
+        return patientMapper.toResponse(patient);
     }
 
     @Override
@@ -33,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
         var patients = patientRepository.findAll();
 
         return patients.stream()
-                .map(PatientMapper::toResponse)
+                .map(patientMapper::toResponse)
                 .toList();
     }
 
@@ -54,7 +55,7 @@ public class PatientServiceImpl implements PatientService {
 
         var savedPatient = patientRepository.save(patient);
 
-        return PatientMapper.toResponse(savedPatient);
+        return patientMapper.toResponse(savedPatient);
     }
 
     @Override
@@ -75,7 +76,7 @@ public class PatientServiceImpl implements PatientService {
 
         var savedPatient = patientRepository.save(patient);
 
-        return PatientMapper.toResponse(savedPatient);
+        return patientMapper.toResponse(savedPatient);
     }
 
     @Override
