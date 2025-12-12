@@ -3,7 +3,7 @@ package com.starter.schedule.service.impl;
 import com.starter.schedule.dto.request.PatientRequest;
 import com.starter.schedule.dto.response.PatientResponse;
 import com.starter.schedule.entity.Patient;
-import com.starter.schedule.exception.ConflictException;
+import com.starter.schedule.exception.DuplicateResourceException;
 import com.starter.schedule.exception.ResourceNotFoundException;
 import com.starter.schedule.mapper.PatientMapper;
 import com.starter.schedule.repository.PatientRepository;
@@ -42,7 +42,7 @@ public class PatientServiceImpl implements PatientService {
     @Transactional
     public PatientResponse create(PatientRequest request) {
         if (patientRepository.existsByCpf(request.cpf())) {
-            throw new ConflictException("CPF já existe");
+            throw new DuplicateResourceException("CPF já existe");
         }
 
         var patient = Patient.builder()
@@ -65,7 +65,7 @@ public class PatientServiceImpl implements PatientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
 
         if (patientRepository.existsByCpf(request.cpf()) && !patient.getCpf().equals(request.cpf())) {
-            throw new ConflictException("CPF já existe");
+            throw new DuplicateResourceException("CPF já existe");
         }
 
         patient.setName(request.name());
