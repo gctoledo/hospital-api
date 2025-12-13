@@ -13,6 +13,4 @@ public interface DoctorService {
     List<DoctorResponse> findAll();
     List<DoctorResponse> findBySpecialty(Specialty specialty);
     DoctorResponse update(Long id, DoctorRequest request);
-    void deactivate(Long id);
-    void activate(Long id);
 }

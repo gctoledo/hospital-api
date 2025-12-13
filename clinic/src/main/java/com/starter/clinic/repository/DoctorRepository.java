@@ -15,7 +15,5 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     boolean existsByCrm(String crm);
 
-    List<Doctor> findBySpecialtyAndActiveTrue(Specialty specialty);
-
-    List<Doctor> findByActiveTrue();
+    List<Doctor> findBySpecialty(Specialty specialty);
 }

@@ -31,16 +31,13 @@ public class Doctor {
     @Column(nullable = false, unique = true)
     private String crm;
 
-    @Column(nullable = false)
-    private boolean active = true;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Specialty specialty;
 
-//    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-//    @Builder.Default
-//    private List<Consultation> consultations = new ArrayList<>();
+    @OneToMany(mappedBy = "doctor")
+    @Builder.Default
+    private List<Consultation> consultations = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
