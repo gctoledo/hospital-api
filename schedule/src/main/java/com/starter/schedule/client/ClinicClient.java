@@ -1,12 +1,10 @@
 package com.starter.schedule.client;
 
 import com.starter.schedule.dto.request.CreateConsultationRequest;
+import com.starter.schedule.dto.request.UpdateScheduleDateRequest;
 import com.starter.schedule.dto.response.ConsultationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,4 +16,7 @@ public interface ClinicClient {
 
     @PostMapping("/consultations")
     ConsultationResponse createConsultation(@RequestBody CreateConsultationRequest request);
+
+    @PutMapping("/consultations/{id}")
+    ConsultationResponse updateConsultationDate(@PathVariable Long id, @RequestBody UpdateScheduleDateRequest request);
 }

@@ -4,6 +4,7 @@ import com.starter.schedule.client.ClinicClient;
 import com.starter.schedule.dto.request.CreateConsultationRequest;
 import com.starter.schedule.dto.request.PatientRequest;
 import com.starter.schedule.dto.request.ScheduleConsultationRequest;
+import com.starter.schedule.dto.request.UpdateScheduleDateRequest;
 import com.starter.schedule.dto.response.ConsultationResponse;
 import com.starter.schedule.dto.response.ScheduleConsultationResponse;
 import com.starter.schedule.entity.Patient;
@@ -48,6 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                     request.specialty(),
                     request.dateTime()
             );
+
             var response = clinicClient.createConsultation(createConsultationRequest);
 
             return new ScheduleConsultationResponse(
@@ -65,6 +67,29 @@ public class ScheduleServiceImpl implements ScheduleService {
                     )
             );
         }
+    }
+
+    @Override
+    public ScheduleConsultationResponse updateConsultationDate(Long id, UpdateScheduleDateRequest request) {
+        try {
+            var response = clinicClient.updateConsultationDate(id, request);
+
+            return new ScheduleConsultationResponse(
+                    String.format("A data da consulta foi alterada para %s",
+                            DateFormatter.format(response.dateTime())
+                    ),
+                    String.format("Código da consulta: %s", response.id())
+            );
+        } catch (FeignException.NotFound ex) {
+            throw new ResourceNotFoundException("Não existe consulta cadastrada com esse ID");
+        } catch (FeignException.Conflict ex) {
+            throw new UnavailableScheduleException(
+                    String.format("%s está indisponível para seu médico",
+                            DateFormatter.format(request.dateTime())
+                    )
+            );
+        }
+
     }
 
     private Patient findOrCreatePatient(PatientRequest patient) {

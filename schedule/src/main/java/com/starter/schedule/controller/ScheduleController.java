@@ -1,6 +1,7 @@
 package com.starter.schedule.controller;
 
 import com.starter.schedule.dto.request.ScheduleConsultationRequest;
+import com.starter.schedule.dto.request.UpdateScheduleDateRequest;
 import com.starter.schedule.dto.response.ConsultationResponse;
 import com.starter.schedule.dto.response.ScheduleConsultationResponse;
 import com.starter.schedule.service.ScheduleService;
@@ -27,6 +28,13 @@ public class ScheduleController {
     @PostMapping("/consultations")
     public ResponseEntity<ScheduleConsultationResponse> createConsultation(@Valid @RequestBody ScheduleConsultationRequest request) {
         var response = scheduleService.createConsultation(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/consultations/{id}/update")
+    public ResponseEntity<ScheduleConsultationResponse> updateConsultationDate(@PathVariable Long id, @Valid @RequestBody UpdateScheduleDateRequest request) {
+        var response = scheduleService.updateConsultationDate(id, request);
 
         return ResponseEntity.ok(response);
     }
