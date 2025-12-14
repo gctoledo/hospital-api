@@ -53,16 +53,4 @@ public class DoctorController {
         DoctorResponse response = doctorService.update(id, request);
         return ResponseEntity.ok(response);
     }
-
-    @PatchMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        doctorService.deactivate(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{id}/activate")
-    public ResponseEntity<Void> activate(@PathVariable Long id) {
-        doctorService.activate(id);
-        return ResponseEntity.noContent().build();
-    }
 }

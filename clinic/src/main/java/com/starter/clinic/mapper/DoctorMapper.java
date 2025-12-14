@@ -12,8 +12,7 @@ public class DoctorMapper {
             doctor.getId(),
             doctor.getName(),
             doctor.getCrm(),
-            doctor.getSpecialty(),
-            doctor.isActive()
+            doctor.getSpecialty()
         );
     }
 
@@ -22,7 +21,6 @@ public class DoctorMapper {
                 .name(request.name())
                 .crm(request.crm())
                 .specialty(request.specialty())
-                .active(true)
                 .build();
     }
 }
