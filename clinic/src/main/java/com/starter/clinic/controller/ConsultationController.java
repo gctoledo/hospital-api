@@ -1,6 +1,7 @@
 package com.starter.clinic.controller;
 
 import com.starter.clinic.dto.request.ConsultationRequest;
+import com.starter.clinic.dto.request.UpdateConsultationDateRequest;
 import com.starter.clinic.dto.response.ConsultationResponse;
 import com.starter.clinic.service.ConsultationService;
 import jakarta.validation.Valid;
@@ -30,5 +31,12 @@ public class ConsultationController {
         var response = consultationService.create(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ConsultationResponse> updateDate(@PathVariable Long id, @Valid @RequestBody UpdateConsultationDateRequest request) {
+        var response = consultationService.updateDate(id, request);
+
+        return ResponseEntity.ok(response);
     }
 }
