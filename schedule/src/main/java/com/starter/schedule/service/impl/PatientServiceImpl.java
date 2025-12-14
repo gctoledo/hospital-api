@@ -2,7 +2,6 @@ package com.starter.schedule.service.impl;
 
 import com.starter.schedule.dto.request.PatientRequest;
 import com.starter.schedule.dto.response.PatientResponse;
-import com.starter.schedule.entity.Patient;
 import com.starter.schedule.exception.DuplicateResourceException;
 import com.starter.schedule.exception.ResourceNotFoundException;
 import com.starter.schedule.mapper.PatientMapper;
@@ -45,13 +44,7 @@ public class PatientServiceImpl implements PatientService {
             throw new DuplicateResourceException("CPF já existe");
         }
 
-        var patient = Patient.builder()
-                .name(request.name())
-                .cpf(request.cpf())
-                .birthDate(request.birthDate())
-                .gender(request.gender())
-                .phone(request.phone())
-                .build();
+        var patient = patientMapper.toEntity(request);
 
         var savedPatient = patientRepository.save(patient);
 
