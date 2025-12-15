@@ -6,6 +6,7 @@ import com.starter.clinic.dto.response.ConsultationResponse;
 import com.starter.clinic.entity.Consultation;
 import com.starter.clinic.entity.Doctor;
 import com.starter.clinic.entity.enums.ConsultationStatus;
+import com.starter.clinic.entity.enums.Specialty;
 import com.starter.clinic.exception.ConflictException;
 import com.starter.clinic.exception.ResourceNotFoundException;
 import com.starter.clinic.mapper.ConsultationMapper;
@@ -30,6 +31,22 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     public List<ConsultationResponse> findByCpf(String cpf) {
         return consultationRepository.findByPatientCpf(cpf)
+                .stream()
+                .map(consultationMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ConsultationResponse> findAll(Specialty specialty) {
+        if (specialty == null) {
+            return consultationRepository.findAll()
+                    .stream()
+                    .map(consultationMapper::toResponse)
+                    .toList();
+        }
+
+        return consultationRepository.findBySpecialty(specialty)
                 .stream()
                 .map(consultationMapper::toResponse)
                 .toList();

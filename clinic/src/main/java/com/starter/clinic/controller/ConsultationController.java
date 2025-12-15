@@ -3,6 +3,7 @@ package com.starter.clinic.controller;
 import com.starter.clinic.dto.request.ConsultationRequest;
 import com.starter.clinic.dto.request.UpdateConsultationDateRequest;
 import com.starter.clinic.dto.response.ConsultationResponse;
+import com.starter.clinic.entity.enums.Specialty;
 import com.starter.clinic.service.ConsultationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,13 @@ import java.util.List;
 public class ConsultationController {
 
     private final ConsultationService consultationService;
+
+    @GetMapping
+    public ResponseEntity<List<ConsultationResponse>> findAll(@RequestParam(required = false) Specialty specialty) {
+        List<ConsultationResponse> response = consultationService.findAll(specialty);
+
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/patient/{cpf}")
     public ResponseEntity<List<ConsultationResponse>> findByCpf(@PathVariable String cpf) {
