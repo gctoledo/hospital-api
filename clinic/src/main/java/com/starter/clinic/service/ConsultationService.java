@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ConsultationService {
     List<ConsultationResponse> findByCpf(String cpf);
-    ConsultationResponse makeReservation(ConsultationRequest request);
+    ConsultationResponse makeReserve(ConsultationRequest request);
     ConsultationResponse create(Long id);
     ConsultationResponse updateDate(Long id, UpdateConsultationDateRequest request);
 }

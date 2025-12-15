@@ -12,7 +12,7 @@ public class ConsultationMapper {
                 consultation.getId(),
                 consultation.getDoctor().getName(),
                 consultation.getPatientCpf(),
-                consultation.getSpecialty(),
+                consultation.getSpecialty().getValue(),
                 consultation.getStatus().getValue(),
                 consultation.getStartDateTime(),
                 consultation.getEndDateTime()

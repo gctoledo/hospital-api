@@ -26,9 +26,9 @@ public class ConsultationController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/reservation")
-    public ResponseEntity<ConsultationResponse> makeReservation(@Valid @RequestBody ConsultationRequest request) {
-        var response = consultationService.makeReservation(request);
+    @PostMapping("/reserve")
+    public ResponseEntity<ConsultationResponse> makeReserve(@Valid @RequestBody ConsultationRequest request) {
+        var response = consultationService.makeReserve(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

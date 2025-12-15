@@ -3,6 +3,7 @@ package com.starter.clinic.service.impl;
 import com.starter.clinic.dto.request.DoctorRequest;
 import com.starter.clinic.dto.response.DoctorResponse;
 import com.starter.clinic.entity.Doctor;
+import com.starter.clinic.entity.enums.ConsultationStatus;
 import com.starter.clinic.entity.enums.Specialty;
 import com.starter.clinic.exception.ConflictException;
 import com.starter.clinic.exception.ResourceNotFoundException;
@@ -13,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -79,5 +82,17 @@ public class DoctorServiceImpl implements DoctorService {
         doctor = doctorRepository.save(doctor);
 
         return doctorMapper.toResponse(doctor);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Doctor> findAvailableDoctor(Specialty specialty, LocalDateTime dateTime) {
+        LocalDateTime endDateTime = dateTime.plusMinutes(30);
+
+        return doctorRepository.findAvailableDoctorBySpecialtyAndDateTime(
+                specialty,
+                List.of(ConsultationStatus.SCHEDULED, ConsultationStatus.RESERVED),
+                dateTime,
+                endDateTime
+        );
     }
 }

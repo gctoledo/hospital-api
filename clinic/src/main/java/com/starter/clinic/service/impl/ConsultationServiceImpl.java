@@ -6,25 +6,23 @@ import com.starter.clinic.dto.response.ConsultationResponse;
 import com.starter.clinic.entity.Consultation;
 import com.starter.clinic.entity.Doctor;
 import com.starter.clinic.entity.enums.ConsultationStatus;
-import com.starter.clinic.entity.enums.Specialty;
 import com.starter.clinic.exception.ConflictException;
 import com.starter.clinic.exception.ResourceNotFoundException;
 import com.starter.clinic.mapper.ConsultationMapper;
 import com.starter.clinic.repository.ConsultationRepository;
-import com.starter.clinic.repository.DoctorRepository;
 import com.starter.clinic.service.ConsultationService;
+import com.starter.clinic.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ConsultationServiceImpl implements ConsultationService {
 
-    private final DoctorRepository doctorRepository;
+    private final DoctorService doctorService;
     private final ConsultationRepository consultationRepository;
     private final ConsultationMapper consultationMapper;
 
@@ -39,8 +37,14 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Transactional
     @Override
-    public ConsultationResponse makeReservation(ConsultationRequest request) {
-        Doctor availableDoctor = findAvailableDoctor(request.specialty(), request.dateTime());
+    public ConsultationResponse makeReserve(ConsultationRequest request) {
+        Doctor availableDoctor = doctorService.findAvailableDoctor(request.specialty(), request.dateTime())
+                .orElseThrow(() -> new ConflictException(
+                        String.format(
+                                "Nenhum médico da especialidade %s disponível.",
+                                request.specialty().getValue()
+                        )
+                ));
 
         var consultation = consultationMapper.toEntity(request);
         consultation.setDoctor(availableDoctor);
@@ -71,7 +75,13 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada."));
 
-        Doctor availableDoctor = findAvailableDoctor(consultation.getSpecialty(), request.dateTime());
+        Doctor availableDoctor = doctorService.findAvailableDoctor(consultation.getSpecialty(), request.dateTime())
+                .orElseThrow(() -> new ConflictException(
+                        String.format(
+                                "Nenhum médico da especialidade %s disponível.",
+                                consultation.getSpecialty().getValue()
+                        )
+                ));
 
         consultation.setDoctor(availableDoctor);
         consultation.setStartDateTime(request.dateTime());
@@ -81,22 +91,5 @@ public class ConsultationServiceImpl implements ConsultationService {
         Consultation savedConsultation = consultationRepository.save(consultation);
 
         return consultationMapper.toResponse(savedConsultation);
-    }
-
-    @Transactional(readOnly = true)
-    private Doctor findAvailableDoctor(Specialty specialty, LocalDateTime dateTime) {
-        LocalDateTime endDateTime = dateTime.plusMinutes(30);
-
-        return doctorRepository.findAvailableDoctorBySpecialtyAndDateTime(
-                specialty,
-                List.of(ConsultationStatus.SCHEDULED, ConsultationStatus.RESERVED),
-                dateTime,
-                endDateTime
-        ).orElseThrow(() -> new ConflictException(
-                String.format(
-                        "Nenhum médico da especialidade %s disponível.",
-                        specialty.getValue()
-                )
-        ));
     }
 }
