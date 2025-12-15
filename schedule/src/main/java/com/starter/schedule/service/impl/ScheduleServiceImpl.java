@@ -1,7 +1,7 @@
 package com.starter.schedule.service.impl;
 
 import com.starter.schedule.client.ClinicClient;
-import com.starter.schedule.dto.request.CreateConsultationRequest;
+import com.starter.schedule.dto.request.FindAvailableDoctorRequest;
 import com.starter.schedule.dto.request.PatientRequest;
 import com.starter.schedule.dto.request.ScheduleConsultationRequest;
 import com.starter.schedule.dto.request.UpdateScheduleDateRequest;
@@ -11,6 +11,8 @@ import com.starter.schedule.entity.Patient;
 import com.starter.schedule.exception.ResourceNotFoundException;
 import com.starter.schedule.exception.UnavailableScheduleException;
 import com.starter.schedule.mapper.PatientMapper;
+import com.starter.schedule.messaging.event.CreateConsultationEvent;
+import com.starter.schedule.messaging.producer.ScheduleProducer;
 import com.starter.schedule.repository.PatientRepository;
 import com.starter.schedule.service.ScheduleService;
 import com.starter.schedule.util.DateFormatter;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final PatientRepository patientRepository;
     private final ClinicClient clinicClient;
     private final PatientMapper patientMapper;
+    private final ScheduleProducer scheduleProducer;
 
     @Override
     public List<ConsultationResponse> findConsultationsByCpf(String cpf) {
@@ -44,20 +48,30 @@ public class ScheduleServiceImpl implements ScheduleService {
         findOrCreatePatient(request.patient());
 
         try {
-            var createConsultationRequest = new CreateConsultationRequest(
+            var findAvailableDoctorRequest = new FindAvailableDoctorRequest(
+                    request.specialty(),
+                    request.dateTime()
+            );
+
+            clinicClient.findAvailableDoctor(findAvailableDoctorRequest);
+
+            var consultationCode = UUID.randomUUID();
+
+            var createConsultationEvent = new CreateConsultationEvent(
+                    consultationCode,
                     request.patient().cpf(),
                     request.specialty(),
                     request.dateTime()
             );
 
-            var response = clinicClient.createConsultation(createConsultationRequest);
+            scheduleProducer.sendConsultationRequest(createConsultationEvent);
 
             return new ScheduleConsultationResponse(
-                    String.format("A consulta para o paciente %s foi agendada para %s",
+                    String.format("A consulta para o paciente %s será agendada para %s",
                             request.patient().name(),
-                            DateFormatter.format(response.dateTime())
+                            DateFormatter.format(request.dateTime())
                     ),
-                    String.format("Código da consulta: %s", response.id())
+                    consultationCode
             );
         } catch (FeignException.Conflict ex) {
             throw new UnavailableScheduleException(
@@ -70,21 +84,22 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleConsultationResponse updateConsultationDate(Long id, UpdateScheduleDateRequest request) {
+    public ScheduleConsultationResponse updateConsultationDate(UUID id, UpdateScheduleDateRequest request) {
         try {
             var response = clinicClient.updateConsultationDate(id, request);
 
             return new ScheduleConsultationResponse(
-                    String.format("A data da consulta foi alterada para %s",
-                            DateFormatter.format(response.dateTime())
+                    String.format("A data da consulta foi alterada para %s com o médico %s",
+                            DateFormatter.format(response.dateTime()),
+                            response.doctorName()
                     ),
-                    String.format("Código da consulta: %s", response.id())
+                    response.code()
             );
         } catch (FeignException.NotFound ex) {
-            throw new ResourceNotFoundException("Não existe consulta cadastrada com esse ID");
+            throw new ResourceNotFoundException("Não existe consulta cadastrada com esse código");
         } catch (FeignException.Conflict ex) {
             throw new UnavailableScheduleException(
-                    String.format("%s está indisponível para seu médico",
+                    String.format("Nenhum médico disponível para %s",
                             DateFormatter.format(request.dateTime())
                     )
             );

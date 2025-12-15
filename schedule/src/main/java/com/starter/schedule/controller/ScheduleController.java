@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class ScheduleController {
     }
 
     @PutMapping("/consultations/{id}/update")
-    public ResponseEntity<ScheduleConsultationResponse> updateConsultationDate(@PathVariable Long id, @Valid @RequestBody UpdateScheduleDateRequest request) {
+    public ResponseEntity<ScheduleConsultationResponse> updateConsultationDate(@PathVariable UUID id, @Valid @RequestBody UpdateScheduleDateRequest request) {
         var response = scheduleService.updateConsultationDate(id, request);
 
         return ResponseEntity.ok(response);
