@@ -1,15 +1,16 @@
 package com.starter.clinic.dto.response;
 
+import com.starter.clinic.entity.enums.Specialty;
+
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public record ConsultationResponse(
         Long id,
-        UUID code,
         String doctorName,
         String patientCpf,
-        String specialty,
+        Specialty specialty,
         String status,
-        LocalDateTime dateTime
+        LocalDateTime startDateTime,
+        LocalDateTime endDateTime
 ) {
 }

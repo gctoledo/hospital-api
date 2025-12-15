@@ -1,7 +1,6 @@
 package com.starter.clinic.messaging.consumer;
 
 import com.starter.clinic.config.RabbitMQConfig;
-import com.starter.clinic.dto.request.ConsultationRequest;
 import com.starter.clinic.messaging.event.CreateConsultationEvent;
 import com.starter.clinic.service.ConsultationService;
 import lombok.RequiredArgsConstructor;
@@ -18,18 +17,14 @@ public class ConsultationConsumer {
 
     @RabbitListener(queues = RabbitMQConfig.CONSULTATION_REQUEST_QUEUE)
     public void handleCreateConsultationRequest(CreateConsultationEvent event) {
-        log.info("Recebendo solicitação de consulta");
+        log.info("Recebendo solicitação de agendamento de consulta");
 
         try {
-            var consultationRequest = new ConsultationRequest(
-                    event.specialty(),
-                    event.patientCpf(),
-                    event.dateTime()
-            );
+            consultationService.create(event.id());
 
-            consultationService.create(event.code(), consultationRequest);
+            log.info("Consulta agendada com sucesso");
         } catch (Exception e) {
-            log.error("Erro ao processar solicitação de consulta: {}", e.getMessage(), e);
+            log.error("Erro ao processar solicitação de agendamento de consulta: {}", e.getMessage(), e);
         }
     }
 }

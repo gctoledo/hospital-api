@@ -8,12 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "consultations")
@@ -27,10 +24,6 @@ public class Consultation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(nullable = false, unique = true)
-    private UUID code;
-
     @Column(name = "patient_cpf", nullable = false, length = 11)
     private String patientCpf;
 
@@ -42,13 +35,16 @@ public class Consultation {
     @Column(nullable = false)
     private Specialty specialty;
 
-    @Column(name = "date_time", nullable = false)
-    private LocalDateTime dateTime;
+    @Column(name = "start_datetime", nullable = false)
+    private LocalDateTime startDateTime;
+
+    @Column(name = "end_datetime", nullable = false)
+    private LocalDateTime endDateTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private ConsultationStatus status = ConsultationStatus.SCHEDULED;
+    private ConsultationStatus status = ConsultationStatus.RESERVED;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

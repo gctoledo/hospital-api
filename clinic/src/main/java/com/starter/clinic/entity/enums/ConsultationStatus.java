@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ConsultationStatus {
+    RESERVED("Reservado"),
     SCHEDULED("Agendado"),
     COMPLETED("Completado"),
     CANCELLED("Cancelado");
