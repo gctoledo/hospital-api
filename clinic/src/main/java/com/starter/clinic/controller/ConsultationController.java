@@ -1,16 +1,16 @@
 package com.starter.clinic.controller;
 
-import com.starter.clinic.dto.request.ConsultationRequest;
+import com.starter.clinic.dto.request.FindAvailableDateRequest;
 import com.starter.clinic.dto.request.UpdateConsultationDateRequest;
 import com.starter.clinic.dto.response.ConsultationResponse;
 import com.starter.clinic.service.ConsultationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/consultations")
@@ -26,16 +26,16 @@ public class ConsultationController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public ResponseEntity<ConsultationResponse> create(@Valid @RequestBody ConsultationRequest request) {
-        var response = consultationService.create(request);
+    @PostMapping("/available")
+    public ResponseEntity<Void> validateAvaialbleDate(@Valid @RequestBody FindAvailableDateRequest request) {
+        var response = consultationService.findAvailableDoctor(request.specialty(), request.dateTime());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ConsultationResponse> updateDate(@PathVariable Long id, @Valid @RequestBody UpdateConsultationDateRequest request) {
-        var response = consultationService.updateDate(id, request);
+    @PutMapping("/{code}")
+    public ResponseEntity<ConsultationResponse> updateDate(@PathVariable UUID code, @Valid @RequestBody UpdateConsultationDateRequest request) {
+        var response = consultationService.updateDate(code, request);
 
         return ResponseEntity.ok(response);
     }

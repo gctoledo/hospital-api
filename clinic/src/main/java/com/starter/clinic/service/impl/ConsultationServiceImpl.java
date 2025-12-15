@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +40,11 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Transactional
     @Override
-    public ConsultationResponse create(ConsultationRequest request) {
+    public ConsultationResponse create(UUID code, ConsultationRequest request) {
         Doctor availableDoctor = findAvailableDoctor(request.specialty(), request.dateTime());
 
         var consultation = consultationMapper.toEntity(request);
+        consultation.setCode(code);
         consultation.setDoctor(availableDoctor);
 
         Consultation savedConsultation = consultationRepository.save(consultation);
@@ -52,18 +54,14 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Transactional
     @Override
-    public ConsultationResponse updateDate(Long id, UpdateConsultationDateRequest request) {
+    public ConsultationResponse updateDate(UUID code, UpdateConsultationDateRequest request) {
         var consultation = consultationRepository
-                .findById(id)
+                .findByCode(code)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada."));
 
-        var isDoctorNotAvailable = consultationRepository
-        .existsByDoctorIdAndDateTimeAndStatusNot(consultation.getDoctor().getId(), request.dateTime(), ConsultationStatus.CANCELLED);
+        Doctor availableDoctor = findAvailableDoctor(consultation.getSpecialty(), request.dateTime());
 
-        if (isDoctorNotAvailable) {
-            throw new ConflictException("Médico não disponível.");
-        }
-
+        consultation.setDoctor(availableDoctor);
         consultation.setDateTime(request.dateTime());
         consultation.setStatus(ConsultationStatus.SCHEDULED);
 
@@ -73,7 +71,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
 
     @Transactional(readOnly = true)
-    private Doctor findAvailableDoctor(Specialty specialty, LocalDateTime dateTime) {
+    public Doctor findAvailableDoctor(Specialty specialty, LocalDateTime dateTime) {
         return doctorRepository.findBySpecialty(specialty)
                 .stream()
                 .filter(doctor -> !consultationRepository.existsByDoctorIdAndDateTimeAndStatusNot(doctor.getId(), dateTime, ConsultationStatus.CANCELLED))

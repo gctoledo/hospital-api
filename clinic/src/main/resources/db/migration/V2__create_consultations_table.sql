@@ -1,5 +1,6 @@
 CREATE TABLE consultations (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(36) NOT NULL UNIQUE,
     patient_cpf VARCHAR(11) NOT NULL,
     doctor_id BIGINT,
     specialty ENUM(

@@ -11,6 +11,8 @@ public class ConsultationMapper {
     public ConsultationResponse toResponse(Consultation consultation) {
         return new ConsultationResponse(
                 consultation.getId(),
+                consultation.getCode(),
+                consultation.getDoctor().getName(),
                 consultation.getPatientCpf(),
                 consultation.getSpecialty().getValue(),
                 consultation.getStatus().getValue(),
