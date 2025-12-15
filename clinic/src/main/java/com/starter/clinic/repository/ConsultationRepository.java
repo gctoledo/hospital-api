@@ -11,4 +11,5 @@ import java.util.List;
 public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
     List<Consultation> findByPatientCpf(String patientCpf);
     List<Consultation> findBySpecialty(Specialty specialty);
+    List<Consultation> findByDoctorId(Long id);
 }

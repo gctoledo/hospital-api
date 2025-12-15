@@ -2,6 +2,7 @@ package com.starter.clinic.controller;
 
 import com.starter.clinic.dto.request.DoctorRequest;
 import com.starter.clinic.dto.request.FindAvailableDoctorsRequest;
+import com.starter.clinic.dto.response.ConsultationResponse;
 import com.starter.clinic.dto.response.DoctorResponse;
 import com.starter.clinic.service.DoctorService;
 import jakarta.validation.Valid;
@@ -25,9 +26,9 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/crm/{crm}")
-    public ResponseEntity<DoctorResponse> findByCrm(@PathVariable String crm) {
-        DoctorResponse response = doctorService.findByCrm(crm);
+    @GetMapping("/{id}/consultations")
+    public ResponseEntity<List<ConsultationResponse>> findDoctorConsultations(@PathVariable Long id) {
+        List<ConsultationResponse> response = doctorService.findDoctorConsultations(id);
         return ResponseEntity.ok(response);
     }
 

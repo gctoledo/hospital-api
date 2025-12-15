@@ -11,19 +11,20 @@ import com.starter.clinic.exception.ConflictException;
 import com.starter.clinic.exception.ResourceNotFoundException;
 import com.starter.clinic.mapper.ConsultationMapper;
 import com.starter.clinic.repository.ConsultationRepository;
+import com.starter.clinic.repository.DoctorRepository;
 import com.starter.clinic.service.ConsultationService;
-import com.starter.clinic.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ConsultationServiceImpl implements ConsultationService {
 
-    private final DoctorService doctorService;
+    private final DoctorRepository doctorRepository;
     private final ConsultationRepository consultationRepository;
     private final ConsultationMapper consultationMapper;
 
@@ -55,7 +56,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Transactional
     @Override
     public ConsultationResponse makeReserve(ConsultationRequest request) {
-        List<Doctor> availableDoctors = doctorService.getAvailableDoctors(request.specialty(), request.dateTime());
+        List<Doctor> availableDoctors = getAvailableDoctors(request.specialty(), request.dateTime());
 
         if (availableDoctors.isEmpty()) {
             throw new ConflictException(
@@ -97,7 +98,7 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada."));
 
-        List<Doctor> availableDoctors = doctorService.getAvailableDoctors(consultation.getSpecialty(), request.dateTime());
+        List<Doctor> availableDoctors = getAvailableDoctors(consultation.getSpecialty(), request.dateTime());
 
         if (availableDoctors.isEmpty()) {
             throw new ConflictException(
@@ -118,5 +119,14 @@ public class ConsultationServiceImpl implements ConsultationService {
         Consultation savedConsultation = consultationRepository.save(consultation);
 
         return consultationMapper.toResponse(savedConsultation);
+    }
+
+    private List<Doctor> getAvailableDoctors(Specialty specialty, LocalDateTime dateTime) {
+        return doctorRepository.findAvailableDoctorBySpecialtyAndDateTime(
+                specialty,
+                List.of(ConsultationStatus.SCHEDULED, ConsultationStatus.RESERVED),
+                dateTime,
+                dateTime.plusMinutes(30)
+        );
     }
 }

@@ -1,13 +1,16 @@
 package com.starter.clinic.service.impl;
 
 import com.starter.clinic.dto.request.DoctorRequest;
+import com.starter.clinic.dto.response.ConsultationResponse;
 import com.starter.clinic.dto.response.DoctorResponse;
 import com.starter.clinic.entity.Doctor;
 import com.starter.clinic.entity.enums.ConsultationStatus;
 import com.starter.clinic.entity.enums.Specialty;
 import com.starter.clinic.exception.ConflictException;
 import com.starter.clinic.exception.ResourceNotFoundException;
+import com.starter.clinic.mapper.ConsultationMapper;
 import com.starter.clinic.mapper.DoctorMapper;
+import com.starter.clinic.repository.ConsultationRepository;
 import com.starter.clinic.repository.DoctorRepository;
 import com.starter.clinic.service.DoctorService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,8 @@ public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
+    private final ConsultationRepository consultationRepository;
+    private final ConsultationMapper consultationMapper;
 
     @Override
     @Transactional
@@ -42,16 +47,20 @@ public class DoctorServiceImpl implements DoctorService {
     public DoctorResponse findById(Long id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado com ID: " + id));
+
         return doctorMapper.toResponse(doctor);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DoctorResponse findByCrm(String crm) {
-        Doctor doctor = doctorRepository.findByCrm(crm)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado com CRM: " + crm));
+    public List<ConsultationResponse> findDoctorConsultations(Long id) {
+        var doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado."));
 
-        return doctorMapper.toResponse(doctor);
+        return consultationRepository.findByDoctorId(id)
+                .stream()
+                .map(consultationMapper::toResponse)
+                .toList();
     }
 
     @Override
@@ -76,14 +85,6 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @Transactional(readOnly = true)
     public List<DoctorResponse> findAvailableDoctors(Specialty specialty, LocalDateTime dateTime) {
-        return getAvailableDoctors(specialty, dateTime).stream()
-                .map(doctorMapper::toResponse)
-                .toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Doctor> getAvailableDoctors(Specialty specialty, LocalDateTime dateTime) {
         LocalDateTime endDateTime = dateTime.plusMinutes(30);
 
         return doctorRepository.findAvailableDoctorBySpecialtyAndDateTime(
@@ -91,6 +92,9 @@ public class DoctorServiceImpl implements DoctorService {
                 List.of(ConsultationStatus.SCHEDULED, ConsultationStatus.RESERVED),
                 dateTime,
                 endDateTime
-        );
+        )
+                .stream()
+                .map(doctorMapper::toResponse)
+                .toList();
     }
 }
