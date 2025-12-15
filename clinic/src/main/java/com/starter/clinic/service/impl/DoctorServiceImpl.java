@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +24,7 @@ public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
 
+    @Override
     @Transactional
     public DoctorResponse create(DoctorRequest request) {
         if (doctorRepository.existsByCrm(request.crm())) {
@@ -37,6 +37,7 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorMapper.toResponse(doctor);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public DoctorResponse findById(Long id) {
         Doctor doctor = doctorRepository.findById(id)
@@ -44,6 +45,7 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorMapper.toResponse(doctor);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public DoctorResponse findByCrm(String crm) {
         Doctor doctor = doctorRepository.findByCrm(crm)
@@ -52,20 +54,7 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorMapper.toResponse(doctor);
     }
 
-    @Transactional(readOnly = true)
-    public List<DoctorResponse> findAll() {
-        return doctorRepository.findAll().stream()
-                .map(doctorMapper::toResponse)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<DoctorResponse> findBySpecialty(Specialty specialty) {
-        return doctorRepository.findBySpecialty(specialty).stream()
-                .map(doctorMapper::toResponse)
-                .toList();
-    }
-
+    @Override
     @Transactional
     public DoctorResponse update(Long id, DoctorRequest request) {
         Doctor doctor = doctorRepository.findById(id)
@@ -84,8 +73,17 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorMapper.toResponse(doctor);
     }
 
+    @Override
     @Transactional(readOnly = true)
-    public Optional<Doctor> findAvailableDoctor(Specialty specialty, LocalDateTime dateTime) {
+    public List<DoctorResponse> findAvailableDoctors(Specialty specialty, LocalDateTime dateTime) {
+        return getAvailableDoctors(specialty, dateTime).stream()
+                .map(doctorMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Doctor> getAvailableDoctors(Specialty specialty, LocalDateTime dateTime) {
         LocalDateTime endDateTime = dateTime.plusMinutes(30);
 
         return doctorRepository.findAvailableDoctorBySpecialtyAndDateTime(

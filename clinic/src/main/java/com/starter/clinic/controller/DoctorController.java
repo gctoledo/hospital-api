@@ -1,8 +1,8 @@
 package com.starter.clinic.controller;
 
 import com.starter.clinic.dto.request.DoctorRequest;
+import com.starter.clinic.dto.request.FindAvailableDoctorsRequest;
 import com.starter.clinic.dto.response.DoctorResponse;
-import com.starter.clinic.entity.enums.Specialty;
 import com.starter.clinic.service.DoctorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,6 @@ public class DoctorController {
 
     private final DoctorService doctorService;
 
-    @PostMapping
-    public ResponseEntity<DoctorResponse> create(@Valid @RequestBody DoctorRequest request) {
-        DoctorResponse response = doctorService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<DoctorResponse> findById(@PathVariable Long id) {
         DoctorResponse response = doctorService.findById(id);
@@ -37,12 +31,16 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public ResponseEntity<List<DoctorResponse>> findAll(
-            @RequestParam(required = false) Specialty specialty) {
-        List<DoctorResponse> response = (specialty != null)
-                ? doctorService.findBySpecialty(specialty)
-                : doctorService.findAll();
+    @PostMapping
+    public ResponseEntity<DoctorResponse> create(@Valid @RequestBody DoctorRequest request) {
+        DoctorResponse response = doctorService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/available")
+    public ResponseEntity<List<DoctorResponse>> findAvailableDoctors(@Valid @RequestBody FindAvailableDoctorsRequest request) {
+        List<DoctorResponse> response = doctorService.findAvailableDoctors(request.specialty(), request.dateTime());
+
         return ResponseEntity.ok(response);
     }
 

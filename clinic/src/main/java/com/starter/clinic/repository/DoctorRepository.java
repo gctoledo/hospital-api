@@ -30,9 +30,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             AND c.endDateTime > :startDateTime
         )
         ORDER BY d.id
-        LIMIT 1
         """)
-    Optional<Doctor> findAvailableDoctorBySpecialtyAndDateTime(
+    List<Doctor> findAvailableDoctorBySpecialtyAndDateTime(
             @Param("specialty") Specialty specialty,
             @Param("statuses") List<ConsultationStatus> statuses,
             @Param("startDateTime") LocalDateTime startDateTime,

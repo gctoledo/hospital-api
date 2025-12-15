@@ -38,13 +38,18 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Transactional
     @Override
     public ConsultationResponse makeReserve(ConsultationRequest request) {
-        Doctor availableDoctor = doctorService.findAvailableDoctor(request.specialty(), request.dateTime())
-                .orElseThrow(() -> new ConflictException(
-                        String.format(
-                                "Nenhum médico da especialidade %s disponível.",
-                                request.specialty().getValue()
-                        )
-                ));
+        List<Doctor> availableDoctors = doctorService.getAvailableDoctors(request.specialty(), request.dateTime());
+
+        if (availableDoctors.isEmpty()) {
+            throw new ConflictException(
+                    String.format(
+                            "Nenhum médico da especialidade %s disponível.",
+                            request.specialty().getValue()
+                    )
+            );
+        }
+
+        Doctor availableDoctor = availableDoctors.getFirst();
 
         var consultation = consultationMapper.toEntity(request);
         consultation.setDoctor(availableDoctor);
@@ -75,13 +80,18 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada."));
 
-        Doctor availableDoctor = doctorService.findAvailableDoctor(consultation.getSpecialty(), request.dateTime())
-                .orElseThrow(() -> new ConflictException(
-                        String.format(
-                                "Nenhum médico da especialidade %s disponível.",
-                                consultation.getSpecialty().getValue()
-                        )
-                ));
+        List<Doctor> availableDoctors = doctorService.getAvailableDoctors(consultation.getSpecialty(), request.dateTime());
+
+        if (availableDoctors.isEmpty()) {
+            throw new ConflictException(
+                    String.format(
+                            "Nenhum médico da especialidade %s disponível.",
+                            consultation.getSpecialty().getValue()
+                    )
+            );
+        }
+
+        Doctor availableDoctor = availableDoctors.getFirst();
 
         consultation.setDoctor(availableDoctor);
         consultation.setStartDateTime(request.dateTime());
