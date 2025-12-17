@@ -10,6 +10,18 @@ spring:
         - id: schedule-service
           uri: ${SCHEDULE_SERVICE_URL:http://localhost:8083}
           predicates:
-            - Path=/api/patients/**,/api/appointments/**
+            - Path=/api/schedules/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
+        - id: clinic-service
+          uri: ${CLINIC_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/clinic/**
+          filters:
+            - StripPrefix=2
+        - id: lab-service
+          uri: ${LAB_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/lab/**
+          filters:
+            - StripPrefix=2
