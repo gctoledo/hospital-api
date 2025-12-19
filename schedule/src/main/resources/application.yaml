@@ -5,6 +5,23 @@ spring:
   application:
     name: schedule
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/hospital}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/hospital/protocol/openid-connect/certs}
+      client:
+        registration:
+          schedule-service:
+            client-id: schedule-service
+            client-secret: ${SCHEDULE_CLIENT_SECRET:XlRQC5MaUMHXpFgAz0Mc6wA0IX9x5Hzr}
+            authorization-grant-type: client_credentials
+            scope: openid
+        provider:
+          schedule-service:
+            token-uri: ${KEYCLOAK_TOKEN_URI:http://localhost:8180/realms/hospital/protocol/openid-connect/token}
+
   datasource:
     url: ${DATASOURCE_URL:jdbc:mysql://localhost:3307/schedule_db?createDatabaseIfNotExist=true}
     username: ${DATASOURCE_USERNAME:root}

@@ -1,5 +1,6 @@
 package com.starter.schedule.client;
 
+import com.starter.schedule.config.FeignClientConfig;
 import com.starter.schedule.dto.request.ConsultationReserveRequest;
 import com.starter.schedule.dto.request.UpdateScheduleDateRequest;
 import com.starter.schedule.dto.response.ConsultationResponse;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "clinic", url = "${services.clinic.url}")
+@FeignClient(name = "clinic", url = "${services.clinic.url}", configuration = FeignClientConfig.class)
 public interface ClinicClient {
 
     @GetMapping("/consultations/patient/{cpf}")

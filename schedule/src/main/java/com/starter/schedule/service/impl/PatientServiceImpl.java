@@ -71,10 +71,4 @@ public class PatientServiceImpl implements PatientService {
 
         return patientMapper.toResponse(savedPatient);
     }
-
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        patientRepository.deleteById(id);
-    }
 }
