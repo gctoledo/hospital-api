@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
     @GetMapping("/{id}/consultations")
     public ResponseEntity<List<ConsultationResponse>> findDoctorConsultations(@PathVariable Long id) {
         List<ConsultationResponse> response = doctorService.findDoctorConsultations(id);
@@ -45,6 +47,7 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<DoctorResponse> update(
             @PathVariable Long id,
