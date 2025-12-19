@@ -52,13 +52,13 @@ services:
       timeout: 5s
       retries: 5
 
-  procedures-db:
+  lab-db:
     image: mysql:8.0
-    container_name: procedures-db
+    container_name: lab-db
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - mysql_procedures_data:/var/lib/mysql
+      - mysql_lab_data:/var/lib/mysql
     ports:
       - "3309:3306"
     networks:
@@ -69,99 +69,56 @@ services:
       timeout: 5s
       retries: 5
 
-  schedule:
-    build:
-      context: ./schedule
-      dockerfile: Dockerfile
-    container_name: schedule-service
+  keycloak-db:
+    image: mysql:8.0
+    container_name: keycloak-db
     environment:
-      SERVER_PORT: 8083
-      DATASOURCE_URL: jdbc:mysql://schedule-db:3306/schedule_db?createDatabaseIfNotExist=true
-      DATASOURCE_USERNAME: root
-      DATASOURCE_PASSWORD: root
-      RABBITMQ_HOST: rabbitmq
-      RABBITMQ_PORT: 5672
-      RABBITMQ_USERNAME: guest
-      RABBITMQ_PASSWORD: guest
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: keycloak
+    volumes:
+      - mysql_keycloak_data:/var/lib/mysql
     ports:
-      - "8083:8083"
+      - "3310:3306"
     networks:
       - hospital-network
-    depends_on:
-      schedule-db:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  clinic:
-    build:
-      context: ./clinic
-      dockerfile: Dockerfile
-    container_name: clinic-service
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: keycloak
     environment:
-      SERVER_PORT: 8081
-      DATASOURCE_URL: jdbc:mysql://clinic-db:3306/clinic_db?createDatabaseIfNotExist=true
-      DATASOURCE_USERNAME: root
-      DATASOURCE_PASSWORD: root
-      RABBITMQ_HOST: rabbitmq
-      RABBITMQ_PORT: 5672
-      RABBITMQ_USERNAME: guest
-      RABBITMQ_PASSWORD: guest
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://keycloak-db:3306/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: true
+    command: start-dev
     ports:
-      - "8081:8081"
+      - "8180:8080"
     networks:
       - hospital-network
     depends_on:
-      clinic-db:
+      keycloak-db:
         condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-
-  procedures:
-    build:
-      context: ./procedures
-      dockerfile: Dockerfile
-    container_name: procedures-service
-    environment:
-      SERVER_PORT: 8082
-      DATASOURCE_URL: jdbc:mysql://procedures-db:3306/procedures_db?createDatabaseIfNotExist=true
-      DATASOURCE_USERNAME: root
-      DATASOURCE_PASSWORD: root
-      RABBITMQ_HOST: rabbitmq
-      RABBITMQ_PORT: 5672
-      RABBITMQ_USERNAME: guest
-      RABBITMQ_PASSWORD: guest
-    ports:
-      - "8082:8082"
-    networks:
-      - hospital-network
-    depends_on:
-      procedures-db:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-
-  gateway:
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
-    container_name: gateway-service
-    environment:
-      SERVER_PORT: 8080
-      SCHEDULE_SERVICE_URL: http://schedule:8083
-    ports:
-      - "8080:8080"
-    networks:
-      - hospital-network
-    depends_on:
-      - schedule
-      - clinic
-      - procedures
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 volumes:
-  mysql_procedures_data:
+  mysql_lab_data:
   mysql_clinic_data:
   mysql_schedule_data:
+  mysql_keycloak_data:
   rabbitmq_data:
 
 networks:
