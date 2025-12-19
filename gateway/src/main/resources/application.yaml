@@ -4,6 +4,13 @@ server:
 spring:
   application:
     name: gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/hospital}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/hospital/protocol/openid-connect/certs}
+
   cloud:
     gateway:
       routes:
@@ -13,15 +20,17 @@ spring:
             - Path=/api/schedules/**
           filters:
             - StripPrefix=2
+
         - id: clinic-service
           uri: ${CLINIC_SERVICE_URL:http://localhost:8081}
           predicates:
             - Path=/api/clinic/**
           filters:
             - StripPrefix=2
-        - id: lab-service
-          uri: ${LAB_SERVICE_URL:http://localhost:8082}
+
+        - id: procedures-service
+          uri: ${PROCEDURES_SERVICE_URL:http://localhost:8082}
           predicates:
-            - Path=/api/lab/**
+            - Path=/api/procedures/**
           filters:
             - StripPrefix=2
