@@ -41,7 +41,7 @@ public class ExamServiceImpl implements ExamService {
 
         examRepository.save(exam);
 
-        return examMapper.toReserveResponse(exam);
+        return examMapper.toReserveResponse(exam, procedure);
     }
 
     @Transactional

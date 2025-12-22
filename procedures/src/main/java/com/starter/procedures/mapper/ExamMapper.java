@@ -15,9 +15,10 @@ import java.time.LocalDateTime;
 @Component
 public class ExamMapper {
 
-    public ReserveExamResponse toReserveResponse(Exam exam){
+    public ReserveExamResponse toReserveResponse(Exam exam, Procedure procedure){
         return new ReserveExamResponse(
-                exam.getId()
+                exam.getId(),
+                procedure.getName()
         );
     }
     public ExamResponse toResponse(Exam exam) {
