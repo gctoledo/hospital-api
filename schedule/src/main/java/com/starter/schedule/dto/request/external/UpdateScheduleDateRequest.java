@@ -1,4 +1,4 @@
-package com.starter.schedule.dto.request;
+package com.starter.schedule.dto.request.external;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;

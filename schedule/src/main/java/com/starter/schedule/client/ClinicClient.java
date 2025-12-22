@@ -1,15 +1,15 @@
 package com.starter.schedule.client;
 
-import com.starter.schedule.config.FeignClientConfig;
-import com.starter.schedule.dto.request.ConsultationReserveRequest;
-import com.starter.schedule.dto.request.UpdateScheduleDateRequest;
-import com.starter.schedule.dto.response.ConsultationResponse;
+import com.starter.schedule.config.FeignConfig;
+import com.starter.schedule.dto.request.external.ConsultationReserveRequest;
+import com.starter.schedule.dto.request.external.UpdateScheduleDateRequest;
+import com.starter.schedule.dto.response.external.ConsultationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "clinic", url = "${services.clinic.url}", configuration = FeignClientConfig.class)
+@FeignClient(name = "clinic", url = "${services.clinic.url}", configuration = FeignConfig.class)
 public interface ClinicClient {
 
     @GetMapping("/consultations/patient/{cpf}")

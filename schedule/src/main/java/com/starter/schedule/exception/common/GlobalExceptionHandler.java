@@ -1,9 +1,10 @@
 package com.starter.schedule.exception.common;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.starter.schedule.exception.BadRequestException;
+import com.starter.schedule.exception.ConflictException;
 import com.starter.schedule.exception.DuplicateResourceException;
 import com.starter.schedule.exception.ResourceNotFoundException;
-import com.starter.schedule.exception.UnavailableScheduleException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -35,8 +36,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    @ExceptionHandler(UnavailableScheduleException.class)
-    public ResponseEntity<ErrorResponse> handleUnavailableScheduleException(UnavailableScheduleException ex) {
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflictException(ConflictException ex) {
+        String message = ex.getMessage();
+        ErrorResponse error = new ErrorResponse(message);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
         String message = ex.getMessage();
         ErrorResponse error = new ErrorResponse(message);
 

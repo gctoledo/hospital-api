@@ -1,4 +1,4 @@
-package com.starter.schedule.dto.response;
+package com.starter.schedule.dto.response.external;
 
 import java.time.LocalDateTime;
 

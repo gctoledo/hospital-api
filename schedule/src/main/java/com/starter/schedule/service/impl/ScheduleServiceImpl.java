@@ -1,15 +1,20 @@
 package com.starter.schedule.service.impl;
 
 import com.starter.schedule.client.ClinicClient;
-import com.starter.schedule.dto.request.ConsultationReserveRequest;
+import com.starter.schedule.client.LabClient;
 import com.starter.schedule.dto.request.PatientRequest;
 import com.starter.schedule.dto.request.ScheduleConsultationRequest;
-import com.starter.schedule.dto.request.UpdateScheduleDateRequest;
-import com.starter.schedule.dto.response.ConsultationResponse;
+import com.starter.schedule.dto.request.ScheduleExamRequest;
+import com.starter.schedule.dto.request.external.ConsultationReserveRequest;
+import com.starter.schedule.dto.request.external.CreateExamRequest;
+import com.starter.schedule.dto.request.external.UpdateScheduleDateRequest;
 import com.starter.schedule.dto.response.ScheduleConsultationResponse;
+import com.starter.schedule.dto.response.ScheduleExamResponse;
+import com.starter.schedule.dto.response.external.ConsultationResponse;
 import com.starter.schedule.entity.Patient;
+import com.starter.schedule.exception.BadRequestException;
+import com.starter.schedule.exception.ConflictException;
 import com.starter.schedule.exception.ResourceNotFoundException;
-import com.starter.schedule.exception.UnavailableScheduleException;
 import com.starter.schedule.mapper.PatientMapper;
 import com.starter.schedule.messaging.event.CreateConsultationEvent;
 import com.starter.schedule.messaging.producer.ScheduleProducer;
@@ -30,6 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final PatientRepository patientRepository;
     private final ClinicClient clinicClient;
+    private final LabClient labClient;
     private final PatientMapper patientMapper;
     private final ScheduleProducer scheduleProducer;
 
@@ -69,12 +75,46 @@ public class ScheduleServiceImpl implements ScheduleService {
                     )
             );
         } catch (FeignException.Conflict ex) {
-            throw new UnavailableScheduleException(
+            throw new ConflictException(
                     String.format("Nenhum médico da especialidade %s disponível para %s",
                             request.specialty().getValue(),
                             DateFormatter.format(request.dateTime())
                     )
             );
+        }
+    }
+
+    @Override
+    public ScheduleExamResponse createExam(ScheduleExamRequest request) {
+        var patient = findOrCreatePatient(request.patient());
+
+        try {
+            var examRequest = new CreateExamRequest(
+                    patient.getCpf(),
+                    request.procedureName(),
+                    request.dateTime()
+            );
+
+            var response = labClient.createExam(examRequest);
+
+            return new ScheduleExamResponse(
+                    response.examId(),
+                    response.procedureName(),
+                    response.startDateTime(),
+                    response.endDateTime(),
+                    String.format(
+                            "%s agendado para %s na data %s.",
+                            response.procedureName(),
+                            patient.getName(),
+                            DateFormatter.format(response.startDateTime())
+                    )
+            );
+        } catch (FeignException.BadRequest ex) {
+            throw new BadRequestException("Exames de alta complexidade não podem ser agendados diretamente");
+        } catch (FeignException.Conflict ex) {
+            throw new ConflictException("Já existe um exame agendado para este procedimento no horário solicitado");
+        } catch (FeignException.NotFound ex) {
+            throw new ResourceNotFoundException("Não existe procedimento com esse nome");
         }
     }
 
@@ -92,7 +132,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         } catch (FeignException.NotFound ex) {
             throw new ResourceNotFoundException("Consulta não encontrada.");
         } catch (FeignException.Conflict ex) {
-            throw new UnavailableScheduleException(
+            throw new ConflictException(
                     String.format("Nenhum médico disponível para %s",
                             DateFormatter.format(request.dateTime())
                     )

@@ -51,3 +51,5 @@ spring:
 services:
   clinic:
     url: ${CLINIC_URL:http://localhost:8081}
+  lab:
+    url: ${LAB_URL:http://localhost:8082}
