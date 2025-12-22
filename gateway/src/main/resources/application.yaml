@@ -28,9 +28,9 @@ spring:
           filters:
             - StripPrefix=2
 
-        - id: procedures-service
-          uri: ${PROCEDURES_SERVICE_URL:http://localhost:8082}
+        - id: lab-service
+          uri: ${LAB_SERVICE_URL:http://localhost:8082}
           predicates:
-            - Path=/api/procedures/**
+            - Path=/api/lab/**
           filters:
             - StripPrefix=2
