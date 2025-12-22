@@ -1,6 +1,7 @@
 package com.starter.procedures.entity;
 
-import com.starter.procedures.entity.enums.Complexity;
+import com.starter.procedures.entity.enums.ExamStatus;
+import com.starter.procedures.entity.enums.Priority;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,27 +13,39 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "procedures")
+@Table(name = "exams")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Procedure {
+public class Exam {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "procedure_id", nullable = false)
+    private Procedure procedure;
 
-    @Column(name = "duration_in_minutes", nullable = false)
-    private Integer durationInMinutes;
+    @Column(name = "patient_cpf", nullable = false, length = 11)
+    private String patientCpf;
+
+    @Column(name = "start_datetime")
+    private LocalDateTime startDateTime;
+
+    @Column(name = "end_datetime")
+    private LocalDateTime endDateTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private Complexity complexity = Complexity.DEFAULT;
+    private ExamStatus status = ExamStatus.CREATED;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private Priority priority = Priority.DEFAULT;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

@@ -10,5 +10,4 @@ public interface ProcedureService {
     ProcedureResponse findById(Long id);
     ProcedureResponse create(ProcedureRequest procedureRequest);
     ProcedureResponse update(Long id, ProcedureRequest procedureRequest);
-    void delete(Long id);
 }

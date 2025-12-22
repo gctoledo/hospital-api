@@ -6,6 +6,7 @@ import com.starter.procedures.service.ProcedureService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class ProcedureController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProcedureResponse> create(@Valid @RequestBody ProcedureRequest request) {
         ProcedureResponse response = procedureService.create(request);
@@ -38,17 +40,11 @@ public class ProcedureController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProcedureResponse> update(@PathVariable Long id, @Valid @RequestBody ProcedureRequest request) {
         ProcedureResponse response = procedureService.update(id, request);
 
         return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        procedureService.delete(id);
-
-        return ResponseEntity.ok().build();
     }
 }

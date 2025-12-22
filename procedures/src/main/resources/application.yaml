@@ -5,8 +5,25 @@ spring:
   application:
     name: procedures
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/hospital}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/hospital/protocol/openid-connect/certs}
+      client:
+        registration:
+          lab-service:
+            client-id: lab-service
+            client-secret: ${LAB_CLIENT_SECRET:IDlJM9G8b8pz5WTkVUylXhNPIqp2w80f}
+            authorization-grant-type: client_credentials
+            scope: openid
+        provider:
+          lab-service:
+            token-uri: ${KEYCLOAK_TOKEN_URI:http://localhost:8180/realms/hospital/protocol/openid-connect/token}
+
   datasource:
-    url: ${DATASOURCE_URL:jdbc:mysql://localhost:3309/procedures_db?createDatabaseIfNotExist=true}
+    url: ${DATASOURCE_URL:jdbc:mysql://localhost:3309/lab_db?createDatabaseIfNotExist=true}
     username: ${DATASOURCE_USERNAME:root}
     password: ${DATASOURCE_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver

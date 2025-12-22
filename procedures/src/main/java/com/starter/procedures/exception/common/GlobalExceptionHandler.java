@@ -1,6 +1,7 @@
 package com.starter.procedures.exception.common;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.starter.procedures.exception.BadRequestException;
 import com.starter.procedures.exception.ConflictException;
 import com.starter.procedures.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,14 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(message);
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
+        String message = ex.getMessage();
+        ErrorResponse error = new ErrorResponse(message);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum ProcedureStatus {
+public enum ExamStatus {
+    CREATED("Criado"),
     SCHEDULED("Agendado"),
     COMPLETED("Completado"),
     CANCELLED("Cancelado");

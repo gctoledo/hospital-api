@@ -63,9 +63,4 @@ public class ProcedureServiceImpl implements ProcedureService {
 
         return procedureMapper.toResponse(procedureRepository.save(procedure));
     }
-
-    @Override
-    public void delete(Long id) {
-        procedureRepository.deleteById(id);
-    }
 }

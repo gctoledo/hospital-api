@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum ProcedurePriority {
-    LOW("Biaxa"),
+public enum Priority {
     DEFAULT("Padrão"),
-    HIGH("Alta");
+    EMERGENCY("Emergencial");
 
     private final String value;
 }

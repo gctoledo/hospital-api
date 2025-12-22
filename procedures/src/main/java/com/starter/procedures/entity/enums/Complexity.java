@@ -6,9 +6,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum Complexity {
-    LOW("Baixo"),
-    MEDIUM("Médio"),
-    HIGH("Alto");
+    DEFAULT("Padrão"),
+    HIGH("Alta complexidade");
 
     private final String value;
 }
