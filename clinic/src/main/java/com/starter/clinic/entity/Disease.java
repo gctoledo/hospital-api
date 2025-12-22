@@ -27,6 +27,9 @@ public class Disease {
     @Column(nullable = false)
     private Severity severity = Severity.DEFAULT;
 
+    @Column(name = "procedure_id")
+    private Long procedureId;
+
     @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DiseaseSymptom> diseaseSymptoms = new HashSet<>();
 }

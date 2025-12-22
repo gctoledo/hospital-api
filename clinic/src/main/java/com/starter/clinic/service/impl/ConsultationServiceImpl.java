@@ -141,7 +141,7 @@ public class ConsultationServiceImpl implements ConsultationService {
             throw new UnauthorizedException("Consulta não pertence ao CPF fornecido.");
         }
 
-        DiagnoseResult diagnose =  diagnoseService.execute(request.symptoms());
+        DiagnoseResult diagnose = diagnoseService.execute(request.patientCpf(), request.symptoms());
 
         consultation.setStatus(ConsultationStatus.COMPLETED);
         consultationRepository.save(consultation);

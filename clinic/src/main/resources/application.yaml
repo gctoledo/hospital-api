@@ -47,3 +47,7 @@ spring:
     port: ${RABBITMQ_PORT:5672}
     username: ${RABBITMQ_USERNAME:guest}
     password: ${RABBITMQ_PASSWORD:guest}
+
+services:
+  lab:
+    url: ${LAB_URL:http://localhost:8082}

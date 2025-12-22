@@ -32,7 +32,7 @@ INSERT INTO symptoms (name) VALUES
 -- Inserir doenças
 INSERT INTO diseases (name, severity) VALUES
 ('Câncer de Pulmão', 'EMERGENCY'),
-('Infarto Agudo do Miocárdio', 'EMERGENCY');
+('Ataque Cardíaco', 'EMERGENCY');
 
 INSERT INTO diseases (name, severity) VALUES
 ('Pneumonia', 'HIGH'),
@@ -60,7 +60,7 @@ INSERT INTO disease_symptoms (disease_id, symptom_id, severity, specificity) VAL
 (1, 18, 'DEFAULT', 0.7),      -- Perda de peso (característico)
 (1, 9, 'DEFAULT', 0.4);       -- Fadiga (moderado)
 
--- INFARTO AGUDO DO MIOCÁRDIO (2)
+-- ATAQUE CARDIACO (2)
 INSERT INTO disease_symptoms (disease_id, symptom_id, severity, specificity) VALUES
 (2, 3, 'EMERGENCY', 0.95),
 (2, 4, 'HIGH', 0.85),
