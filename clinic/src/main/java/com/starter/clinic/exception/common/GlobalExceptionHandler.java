@@ -3,6 +3,8 @@ package com.starter.clinic.exception.common;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.starter.clinic.exception.ConflictException;
 import com.starter.clinic.exception.ResourceNotFoundException;
+import com.starter.clinic.exception.UnauthorizedException;
+import com.starter.clinic.exception.UnrecognizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -32,6 +34,22 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(message);
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(UnrecognizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnrecognizedException(UnrecognizedException ex) {
+        String message = ex.getMessage();
+        ErrorResponse error = new ErrorResponse(message);
+
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(error);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
+        String message = ex.getMessage();
+        ErrorResponse error = new ErrorResponse(message);
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
