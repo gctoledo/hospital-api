@@ -33,7 +33,7 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   clinic-db:
     image: mysql:8.0
@@ -50,7 +50,7 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   lab-db:
     image: mysql:8.0
@@ -67,7 +67,7 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   keycloak-db:
     image: mysql:8.0
@@ -87,10 +87,10 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   keycloak:
-    image: quay.io/keycloak/keycloak:23.0
+    image: quay.io/keycloak/keycloak:23.0.7
     container_name: keycloak
     environment:
       KC_DB: mysql
@@ -99,8 +99,14 @@ services:
       KC_DB_PASSWORD: keycloak
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HEALTH_ENABLED: true
-    command: start-dev
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HOSTNAME_URL: http://localhost:8180
+      KC_HOSTNAME_ADMIN_URL: http://localhost:8180
+    command: start-dev --import-realm
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
     ports:
       - "8180:8080"
     networks:
@@ -108,11 +114,111 @@ services:
     depends_on:
       keycloak-db:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
+
+  schedule:
+    build:
+      context: ./schedule
+      dockerfile: Dockerfile
+    container_name: schedule-service
+    environment:
+      SERVER_PORT: 8083
+      DATASOURCE_URL: jdbc:mysql://schedule-db:3306/schedule_db?createDatabaseIfNotExist=true
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD: root
+      KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/hospital
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/hospital/protocol/openid-connect/certs
+      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/hospital/protocol/openid-connect/token
+      SCHEDULE_CLIENT_SECRET: XlRQC5MaUMHXpFgAz0Mc6wA0IX9x5Hzr
+      CLINIC_URL: http://clinic:8081
+      LAB_URL: http://lab:8082
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    ports:
+      - "8083:8083"
+    networks:
+      - hospital-network
+    depends_on:
+      schedule-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  clinic:
+    build:
+      context: ./clinic
+      dockerfile: Dockerfile
+    container_name: clinic-service
+    environment:
+      SERVER_PORT: 8081
+      DATASOURCE_URL: jdbc:mysql://clinic-db:3306/clinic_db?createDatabaseIfNotExist=true
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD: root
+      KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/hospital
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/hospital/protocol/openid-connect/certs
+      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/hospital/protocol/openid-connect/token
+      CLINIC_CLIENT_SECRET: 78CTyi3vnLr1A5d9DNUht5JUANC9zC39
+      LAB_URL: http://lab:8082
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    ports:
+      - "8081:8081"
+    networks:
+      - hospital-network
+    depends_on:
+      clinic-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  lab:
+    build:
+      context: ./procedures
+      dockerfile: Dockerfile
+    container_name: lab-service
+    environment:
+      SERVER_PORT: 8082
+      DATASOURCE_URL: jdbc:mysql://lab-db:3306/lab_db?createDatabaseIfNotExist=true
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD: root
+      KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/hospital
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/hospital/protocol/openid-connect/certs
+      KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/hospital/protocol/openid-connect/token
+      LAB_CLIENT_SECRET: IDlJM9G8b8pz5WTkVUylXhNPIqp2w80f
+    ports:
+      - "8082:8082"
+    networks:
+      - hospital-network
+    depends_on:
+      lab-db:
+        condition: service_healthy
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    environment:
+      SERVER_PORT: 8080
+      SCHEDULE_SERVICE_URL: http://schedule:8083
+      CLINIC_SERVICE_URL: http://clinic:8081
+      LAB_SERVICE_URL: http://lab:8082
+      KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/hospital
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/hospital/protocol/openid-connect/certs
+    ports:
+      - "8080:8080"
+    networks:
+      - hospital-network
+    depends_on:
+      schedule:
+        condition: service_started
+      clinic:
+        condition: service_started
+      lab:
+        condition: service_started
 
 volumes:
   mysql_lab_data:

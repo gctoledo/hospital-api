@@ -1,0 +1,2086 @@
+{
+	"info": {
+		"_postman_id": "74af938d-307b-4610-bc9b-5a32af213a88",
+		"name": "Hospital-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49582754",
+		"_collection_link": "https://www.postman.com/gabriel-toledo-11a426bd-1075546/workspace/hospital-api/collection/49582754-74af938d-307b-4610-bc9b-5a32af213a88?action=share&source=collection_link&creator=49582754"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"  // Verifica se a requisição foi bem sucedida\r",
+									"  if (pm.response.code === 200) {\r",
+									"      // Pega a resposta JSON\r",
+									"      var jsonData = pm.response.json();\r",
+									"\r",
+									"      // Extrai o access_token da resposta\r",
+									"      var token = jsonData.access_token;\r",
+									"\r",
+									"      // Salva na variável da collection\r",
+									"      pm.collectionVariables.set(\"access_token\", token);\r",
+									"\r",
+									"      // Exibe mensagem de sucesso no console\r",
+									"      console.log(\"Token salvo com sucesso:\", token);\r",
+									"\r",
+									"      // Opcional: exibir quando o token expira\r",
+									"      if (jsonData.expires_in) {\r",
+									"          console.log(\"Token expira em:\", jsonData.expires_in, \"segundos\");\r",
+									"      }\r",
+									"  } else {\r",
+									"      console.log(\"Erro ao obter token. Status:\", pm.response.code);\r",
+									"  }"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "gateway-client",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "oZes67OGtU9UEs0U7AusaKEw7BkzBiCc",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "admin1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{KEYCLOAK_URL}}/realms/hospital/protocol/openid-connect/token",
+							"host": [
+								"{{KEYCLOAK_URL}}"
+							],
+							"path": [
+								"realms",
+								"hospital",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Schedule Service",
+			"item": [
+				{
+					"name": "Patients",
+					"item": [
+						{
+							"name": "Find Patient by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/patients/:id",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"patients",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								},
+								"description": "Retorna um paciente cadastrado no sistema pelo ID"
+							},
+							"response": [
+								{
+									"name": "Find Patient by ID",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/patients/:id",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"patients",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 14:57:59 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 1,\n    \"name\": \"Gabriel Costa Toledo\",\n    \"cpf\": \"00875560067\",\n    \"birthDate\": \"1998-05-13\",\n    \"gender\": \"MALE\",\n    \"phone\": \"11987654321\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Find All Patients",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/patients",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"patients"
+									]
+								},
+								"description": "Retorna a lista completa de todos os pacientes cadastrados no sistema."
+							},
+							"response": [
+								{
+									"name": "Find All Patients",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/patients",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"patients"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 14:55:05 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Gabriel Costa Toledo\",\n        \"cpf\": \"00875560067\",\n        \"birthDate\": \"1998-05-13\",\n        \"gender\": \"MALE\",\n        \"phone\": \"11987654321\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"João Pedro Oliveira\",\n        \"cpf\": \"23456789012\",\n        \"birthDate\": \"1990-07-22\",\n        \"gender\": \"MALE\",\n        \"phone\": \"11976543210\"\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Ana Carolina Souza\",\n        \"cpf\": \"34567890123\",\n        \"birthDate\": \"1978-11-08\",\n        \"gender\": \"FEMALE\",\n        \"phone\": \"11965432109\"\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Carlos Eduardo Lima\",\n        \"cpf\": \"45678901234\",\n        \"birthDate\": \"1995-01-30\",\n        \"gender\": \"MALE\",\n        \"phone\": \"11954321098\"\n    },\n    {\n        \"id\": 5,\n        \"name\": \"Patricia Fernandes Costa\",\n        \"cpf\": \"56789012345\",\n        \"birthDate\": \"1988-09-12\",\n        \"gender\": \"FEMALE\",\n        \"phone\": \"11943210987\"\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Create Patient",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Danilo Silva\",\r\n    \"cpf\": \"05384987654\",\r\n    \"birthDate\": \"1978-10-16\",\r\n    \"gender\": \"MALE\",\r\n    \"phone\": \"11111111111\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/patients",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"patients"
+									]
+								},
+								"description": "Cadastra um paciente no sistema"
+							},
+							"response": [
+								{
+									"name": "Create Patient",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Danilo Silva\",\r\n    \"cpf\": \"05384987654\",\r\n    \"birthDate\": \"1978-10-16\",\r\n    \"gender\": \"MALE\",\r\n    \"phone\": \"11111111111\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/patients",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"patients"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 14:59:28 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 6,\n    \"name\": \"Danilo Silva\",\n    \"cpf\": \"05384987654\",\n    \"birthDate\": \"1978-10-16\",\n    \"gender\": \"MALE\",\n    \"phone\": \"11111111111\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Update Patient",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Danilo Silva\",\r\n    \"cpf\": \"05384987654\",\r\n    \"birthDate\": \"1978-10-16\",\r\n    \"gender\": \"MALE\",\r\n    \"phone\": \"111111111111\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/patients/:id",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"patients",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								},
+								"description": "Atualiza um paciente já cadastrado no sistema"
+							},
+							"response": [
+								{
+									"name": "Update Patient",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Danilo Silva\",\r\n    \"cpf\": \"05384987654\",\r\n    \"birthDate\": \"1978-10-16\",\r\n    \"gender\": \"MALE\",\r\n    \"phone\": \"111111111111\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/patients/:id",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"patients",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "6"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:00:02 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 6,\n    \"name\": \"Danilo Silva\",\n    \"cpf\": \"05384987654\",\n    \"birthDate\": \"1978-10-16\",\n    \"gender\": \"MALE\",\n    \"phone\": \"11111111111\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Consultations",
+					"item": [
+						{
+							"name": "Find Consultations By Cpf",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/consultations/:cpf",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"consultations",
+										":cpf"
+									],
+									"variable": [
+										{
+											"key": "cpf",
+											"value": "00875560067"
+										}
+									]
+								},
+								"description": "Retorna todas as consultas de um usuário pelo CPF do paciente"
+							},
+							"response": [
+								{
+									"name": "Find Consultations By Cpf",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/consultations/:cpf",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"consultations",
+												":cpf"
+											],
+											"variable": [
+												{
+													"key": "cpf",
+													"value": "00875560067"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:01:41 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 2,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Schedule Consultation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"patient\": {\r\n        \"name\": \"Gabriel Toledo\",\r\n        \"cpf\": \"00875560067\",\r\n        \"birthDate\": \"1978-10-16\",\r\n        \"gender\": \"MALE\",\r\n        \"phone\": \"11111111111\"\r\n    },\r\n    \"specialty\": \"CARDIOLOGY\",\r\n    \"dateTime\": \"2026-05-25T19:00:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/consultations",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"consultations"
+									]
+								},
+								"description": "Agenda uma consulta para um paciente"
+							},
+							"response": [
+								{
+									"name": "Schedule Consultation",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"patient\": {\r\n        \"name\": \"Gabriel Toledo\",\r\n        \"cpf\": \"00875560067\",\r\n        \"birthDate\": \"1978-10-16\",\r\n        \"gender\": \"MALE\",\r\n        \"phone\": \"11111111111\"\r\n    },\r\n    \"specialty\": \"CARDIOLOGY\",\r\n    \"dateTime\": \"2026-05-25T19:00:00\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/consultations",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"consultations"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:02:38 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"consultation\": {\n        \"id\": 3,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Reservado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    },\n    \"message\": \"A consulta para o paciente Gabriel Toledo foi reservada para 25/05/2026 às 19:00\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Update Consultation Date",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dateTime\": \"2026-06-25T19:00:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/consultations/:id/update/date",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"consultations",
+										":id",
+										"update",
+										"date"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Atualiza a data de uma consulta já cadastrada"
+							},
+							"response": [
+								{
+									"name": "Update Consultation Date",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"dateTime\": \"2026-06-25T19:00:00\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/consultations/:id/update/date",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"consultations",
+												":id",
+												"update",
+												"date"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "3"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:04:56 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"consultation\": {\n        \"id\": 3,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-25T19:00:00\"\n    },\n    \"message\": \"A data da consulta foi alterada para 25/06/2026 às 19:00\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Exams",
+					"item": [
+						{
+							"name": "Find Exam By Cpf",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/exams/:cpf",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"exams",
+										":cpf"
+									],
+									"variable": [
+										{
+											"key": "cpf",
+											"value": "00875560067"
+										}
+									]
+								},
+								"description": "Retorna os exames cadastrados pelo CPF do paciente"
+							},
+							"response": [
+								{
+									"name": "Find Exam By Cpf",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/exams/:cpf",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"exams",
+												":cpf"
+											],
+											"variable": [
+												{
+													"key": "cpf",
+													"value": "00875560067"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:06:47 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"examId\": 1,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2025-12-26T20:00:00\"\n    },\n    {\n        \"examId\": 2,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Cancelado\",\n        \"startDateTime\": null\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Schedule Exam",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"patient\": {\r\n        \"name\": \"Gabriel Toledo\",\r\n        \"cpf\": \"00875560067\",\r\n        \"birthDate\": \"1978-10-16\",\r\n        \"gender\": \"MALE\",\r\n        \"phone\": \"11111111111\"\r\n    },\r\n    \"procedureName\": \"Ultrassom\",\r\n    \"dateTime\": \"2026-05-25T19:00:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/exams",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"exams"
+									]
+								},
+								"description": "Agenda um exame para um paciente"
+							},
+							"response": [
+								{
+									"name": "Schedule Exam",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"patient\": {\r\n        \"name\": \"Gabriel Toledo\",\r\n        \"cpf\": \"00875560067\",\r\n        \"birthDate\": \"1978-10-16\",\r\n        \"gender\": \"MALE\",\r\n        \"phone\": \"11111111111\"\r\n    },\r\n    \"procedureName\": \"Ultrassom\",\r\n    \"dateTime\": \"2026-05-25T19:00:00\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/exams",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"exams"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:07:59 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"exam\": {\n        \"examId\": 3,\n        \"procedureName\": \"Ultrassom\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    },\n    \"message\": \"Ultrassom agendado para Gabriel Costa Toledo na data 25/05/2026 às 19:00.\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Update Exam Date",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dateTime\": \"2026-06-26T19:00:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/schedule/exams/:id/update/date",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"schedule",
+										"exams",
+										":id",
+										"update",
+										"date"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Atualiza a data de um exame já cadastrado"
+							},
+							"response": [
+								{
+									"name": "Update Exam Date",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"dateTime\": \"2026-06-26T19:00:00\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/schedule/exams/:id/update/date",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"schedule",
+												"exams",
+												":id",
+												"update",
+												"date"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:09:02 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"exam\": {\n        \"examId\": 1,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-26T19:00:00\"\n    },\n    \"message\": \"A data do exame foi alterado para 26/06/2026 às 19:00\"\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Clinic Service",
+			"item": [
+				{
+					"name": "Doctors",
+					"item": [
+						{
+							"name": "Find Doctor By ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/clinic/doctors/:id",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"clinic",
+										"doctors",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								},
+								"description": "Retorna um médico cadastrado pelo ID"
+							},
+							"response": [
+								{
+									"name": "Find Doctor By ID",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/clinic/doctors/:id",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"clinic",
+												"doctors",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:10:28 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 1,\n    \"name\": \"Michel Pinto\",\n    \"crm\": \"CRM/SP-123456\",\n    \"specialty\": \"GENERAL_PRACTICE\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Find Doctor Consultations",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/clinic/doctors/:id/consultations",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"clinic",
+										"doctors",
+										":id",
+										"consultations"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								},
+								"description": "Retorna todas as consultadas de um médico"
+							},
+							"response": [
+								{
+									"name": "Find Doctor Consultation",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/clinic/doctors/:id/consultations",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"clinic",
+												"doctors",
+												":id",
+												"consultations"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "2"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:11:57 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 2,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 3,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-25T19:00:00\"\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Create Doctor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Valmiro Cleude\",\r\n    \"crm\": \"123461/SP\",\r\n    \"specialty\": \"DERMATOLOGY\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/clinic/doctors",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"clinic",
+										"doctors"
+									]
+								},
+								"description": "Cadastra no sistema um novo médico"
+							},
+							"response": [
+								{
+									"name": "Create Doctor",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Valmiro Cleude\",\r\n    \"crm\": \"123461/SP\",\r\n    \"specialty\": \"DERMATOLOGY\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/clinic/doctors",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"clinic",
+												"doctors"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:13:10 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 4,\n    \"name\": \"Valmiro Cleude\",\n    \"crm\": \"123461/SP\",\n    \"specialty\": \"DERMATOLOGY\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Update Doctor",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Valmiro Cleude\",\r\n    \"crm\": \"123461/SP\",\r\n    \"specialty\": \"DERMATOLOGY\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/clinic/doctors/:id",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"clinic",
+										"doctors",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "4"
+										}
+									]
+								},
+								"description": "Atualiza os dados de um médico já cadastrado"
+							},
+							"response": [
+								{
+									"name": "Update Doctor",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Valmiro Cleude\",\r\n    \"crm\": \"123461/SP\",\r\n    \"specialty\": \"DERMATOLOGY\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/clinic/doctors/:id",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"clinic",
+												"doctors",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "4"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:13:51 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 4,\n    \"name\": \"Valmiro Cleude\",\n    \"crm\": \"123461/SP\",\n    \"specialty\": \"DERMATOLOGY\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Consultations",
+					"item": [
+						{
+							"name": "Find all Consultations or By Specialty",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/clinic/consultations?specialty=CARDIOLOGY",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"clinic",
+										"consultations"
+									],
+									"query": [
+										{
+											"key": "specialty",
+											"value": "CARDIOLOGY"
+										}
+									]
+								},
+								"description": "Retorna todas as consultas criadas ou todas as consultas de uma especialidade"
+							},
+							"response": [
+								{
+									"name": "Find all Consultations or By Specialty",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/clinic/consultations?specialty=CARDIOLOGY",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"clinic",
+												"consultations"
+											],
+											"query": [
+												{
+													"key": "specialty",
+													"value": "CARDIOLOGY"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:15:04 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 2,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 3,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-25T19:00:00\"\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Attend Consultation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"patientCpf\": \"00875560067\",\r\n    \"symptoms\": [\"Coriza\", \"Tosse\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/clinic/consultations/:id/attend",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"clinic",
+										"consultations",
+										":id",
+										"attend"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Atende uma consulta, retornando o diagnótisco e o cadastro do exame, se for necessário"
+							},
+							"response": [
+								{
+									"name": "Attend Consultation",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"patientCpf\": \"00875560067\",\r\n    \"symptoms\": [\"Coriza\", \"Tosse\"]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/clinic/consultations/:id/attend",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"clinic",
+												"consultations",
+												":id",
+												"attend"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "3"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:15:56 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"diseaseName\": \"COVID-19\",\n    \"requireExam\": true,\n    \"examId\": 4,\n    \"examName\": \"Teste de COVID\",\n    \"message\": \"Solicitação de exame cadastrada. Utilize o ID para agendar o horário em nosso sistema.\"\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Lab Service",
+			"item": [
+				{
+					"name": "Exams",
+					"item": [
+						{
+							"name": "Find Exam By Cpf",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/lab/exams/patient/:cpf",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"lab",
+										"exams",
+										"patient",
+										":cpf"
+									],
+									"variable": [
+										{
+											"key": "cpf",
+											"value": ""
+										}
+									]
+								},
+								"description": "Retorna todos os exames cadastrados pelo CPF do paciente"
+							},
+							"response": [
+								{
+									"name": "Find Exam By Cpf",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/lab/exams/patient/:cpf",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"lab",
+												"exams",
+												"patient",
+												":cpf"
+											],
+											"variable": [
+												{
+													"key": "cpf",
+													"value": "00875560067"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:16:51 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"examId\": 1,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-26T19:00:00\"\n    },\n    {\n        \"examId\": 2,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Cancelado\",\n        \"startDateTime\": null\n    },\n    {\n        \"examId\": 3,\n        \"procedureName\": \"Ultrassom\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    },\n    {\n        \"examId\": 4,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Criado\",\n        \"startDateTime\": null\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Confirm Exam Date",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dateTime\": \"2026-06-27T19:00:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{GATEWAY_BASEURL}}/lab/exams/:id/confirm/date",
+									"host": [
+										"{{GATEWAY_BASEURL}}"
+									],
+									"path": [
+										"lab",
+										"exams",
+										":id",
+										"confirm",
+										"date"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Confirma a data do exame para exames gerados automaticamente pela rota de atendimento do serviço de Clinica"
+							},
+							"response": [
+								{
+									"name": "Confirm Exam Date",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"dateTime\": \"2026-06-27T19:00:00\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{GATEWAY_BASEURL}}/lab/exams/:id/confirm/date",
+											"host": [
+												"{{GATEWAY_BASEURL}}"
+											],
+											"path": [
+												"lab",
+												"exams",
+												":id",
+												"confirm",
+												"date"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "4"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 23 Dec 2025 15:18:17 GMT"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"examId\": 4,\n    \"dateTime\": \"2026-06-27T19:00:00\",\n    \"message\": \"Teste de COVID para o CPF 00875560067 foi agendado para 27/06/2026 às 19:00\"\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "GATEWAY_BASEURL",
+			"value": ""
+		},
+		{
+			"key": "KEYCLOAK_URL",
+			"value": ""
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		}
+	]
+}
