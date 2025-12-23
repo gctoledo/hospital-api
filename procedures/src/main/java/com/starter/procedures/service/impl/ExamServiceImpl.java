@@ -3,9 +3,11 @@ package com.starter.procedures.service.impl;
 import com.starter.procedures.dto.request.ExamRequest;
 import com.starter.procedures.dto.request.ReserveExamRequest;
 import com.starter.procedures.dto.request.ScheduleExamRequest;
+import com.starter.procedures.dto.request.UpdateExamDateRequest;
 import com.starter.procedures.dto.response.ExamResponse;
 import com.starter.procedures.dto.response.ReserveExamResponse;
 import com.starter.procedures.dto.response.ScheduleExamResponse;
+import com.starter.procedures.entity.Exam;
 import com.starter.procedures.entity.enums.Complexity;
 import com.starter.procedures.entity.enums.ExamStatus;
 import com.starter.procedures.entity.enums.Priority;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,14 @@ public class ExamServiceImpl implements ExamService {
     private final ExamRepository examRepository;
     private final ProcedureRepository procedureRepository;
     private final ExamMapper examMapper;
+
+    @Override
+    public List<ExamResponse> findByCpf(String cpf) {
+        return examRepository.findByPatientCpf(cpf)
+                .stream()
+                .map(examMapper::toResponse)
+                .toList();
+    }
 
     @Transactional
     @Override
@@ -72,7 +83,7 @@ public class ExamServiceImpl implements ExamService {
 
     @Transactional
     @Override
-    public ScheduleExamResponse schedule(Long examId, ScheduleExamRequest request) {
+    public ScheduleExamResponse confirmDate(Long examId, ScheduleExamRequest request) {
         var exam = examRepository.findById(examId)
                 .orElseThrow(() -> new ResourceNotFoundException("Exame não encontrado"));
 
@@ -84,8 +95,53 @@ public class ExamServiceImpl implements ExamService {
         LocalDateTime startDateTime = request.dateTime();
         LocalDateTime endDateTime = startDateTime.plusMinutes(procedure.getDurationInMinutes());
 
+        checkConflictingExam(exam, startDateTime, endDateTime);
+
+        exam.setStartDateTime(startDateTime);
+        exam.setEndDateTime(endDateTime);
+        exam.setStatus(ExamStatus.SCHEDULED);
+
+        examRepository.save(exam);
+
+        return new ScheduleExamResponse(
+                exam.getId(),
+                exam.getStartDateTime(),
+                String.format(
+                        "%s para o CPF %s foi agendado para %s",
+                        procedure.getName(),
+                        exam.getPatientCpf(),
+                        DateFormatter.format(exam.getStartDateTime())
+                )
+        );
+    }
+
+    @Override
+    public ExamResponse updateDate(Long examId, UpdateExamDateRequest request) {
+        var exam = examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException("Exame não encontrado"));
+
+        if (exam.getStatus().equals(ExamStatus.COMPLETED) || exam.getStatus().equals(ExamStatus.CANCELLED)) {
+            throw new ConflictException("Exame foi cancelado ou já foi realizado.");
+        }
+
+        var procedure = exam.getProcedure();
+        LocalDateTime startDateTime = request.dateTime();
+        LocalDateTime endDateTime = startDateTime.plusMinutes(procedure.getDurationInMinutes());
+
+        checkConflictingExam(exam, startDateTime, endDateTime);
+
+        exam.setStatus(ExamStatus.SCHEDULED);
+        exam.setStartDateTime(startDateTime);
+        exam.setEndDateTime(endDateTime);
+
+        examRepository.save(exam);
+
+        return examMapper.toResponse(exam);
+    }
+
+    private void checkConflictingExam(Exam exam, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         var conflictingExam = examRepository.findConflictingExam(
-                procedure.getId(),
+                exam.getProcedure().getId(),
                 startDateTime,
                 endDateTime
         );
@@ -104,22 +160,5 @@ public class ExamServiceImpl implements ExamService {
                 );
             }
         }
-
-        exam.setStartDateTime(startDateTime);
-        exam.setEndDateTime(endDateTime);
-        exam.setStatus(ExamStatus.SCHEDULED);
-
-        examRepository.save(exam);
-
-        return new ScheduleExamResponse(
-                exam.getId(),
-                exam.getStartDateTime(),
-                String.format(
-                        "%s para o CPF %s foi agendado para %s",
-                        procedure.getName(),
-                        exam.getPatientCpf(),
-                        DateFormatter.format(exam.getStartDateTime())
-                )
-        );
     }
 }

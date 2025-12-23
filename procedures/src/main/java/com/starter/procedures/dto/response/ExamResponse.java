@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 public record ExamResponse(
         Long examId,
         String procedureName,
-        LocalDateTime startDateTime,
-        LocalDateTime endDateTime
+        String patientCpf,
+        String status,
+        LocalDateTime startDateTime
 ) {
 }

@@ -25,8 +25,9 @@ public class ExamMapper {
         return new ExamResponse(
                 exam.getId(),
                 exam.getProcedure().getName(),
-                exam.getStartDateTime(),
-                exam.getEndDateTime()
+                exam.getPatientCpf(),
+                exam.getStatus().getValue(),
+                exam.getStartDateTime()
         );
     }
 
