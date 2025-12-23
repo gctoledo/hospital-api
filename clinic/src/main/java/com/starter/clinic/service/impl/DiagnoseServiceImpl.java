@@ -58,7 +58,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
         boolean requireExam = disease.getProcedureId() != null;
         Long examId = null;
         String examName = null;
-        String message = "Solicitação de exame cadastrada. Utilize o ID para agendar o horário em nosso sistema.";
+        String message = "Solicitação de exame cadastrada. Utilize o ID para confirmar o horário em nosso sistema.";
 
         if (requireExam) {
             ExamPriority priority = determinePriority(emergencyScore);
