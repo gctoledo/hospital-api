@@ -1,8 +1,8 @@
-# Gateway Service
+# 🌐 Gateway Service
 
 API Gateway do sistema Hospital API, responsável por rotear requisições para os microsserviços backend.
 
-## Tecnologias
+## 🛠️ Tecnologias
 
 - Java 21
 - Spring Boot 3.5.8
@@ -10,14 +10,14 @@ API Gateway do sistema Hospital API, responsável por rotear requisições para 
 - Spring Security + OAuth2
 - WebFlux (programação reativa)
 
-## Responsabilidades
+## 📋 Responsabilidades
 
 - Roteamento de requisições para microsserviços
 - Validação de tokens JWT com Keycloak
 - Controle de acesso baseado em roles
 - Ponto único de entrada para clientes
 
-## Rotas Configuradas
+## 🔀 Rotas Configuradas
 
 | Caminho          | Destino          | Porta | Descrição                        |
 |------------------|------------------|-------|----------------------------------|
@@ -27,11 +27,11 @@ API Gateway do sistema Hospital API, responsável por rotear requisições para 
 
 Todas as rotas removem o prefixo `/api/<service>` antes de encaminhar para o microsserviço.
 
-### Exemplo
+### 📝 Exemplo
 - Cliente acessa: `http://localhost:8080/api/schedule/patients`
 - Gateway roteia para: `http://schedule:8083/patients`
 
-## Variáveis de Ambiente
+## ⚙️ Variáveis de Ambiente
 
 | Variável                  | Descrição                           | Padrão                                                     |
 |---------------------------|-------------------------------------|------------------------------------------------------------|
@@ -42,15 +42,15 @@ Todas as rotas removem o prefixo `/api/<service>` antes de encaminhar para o mic
 | KEYCLOAK_ISSUER_URI       | URI do emissor Keycloak             | http://localhost:8180/realms/hospital                      |
 | KEYCLOAK_JWK_SET_URI      | URI do JWK Set do Keycloak          | http://localhost:8180/realms/hospital/protocol/openid-connect/certs |
 
-## Como Executar
+## 🚀 Como Executar
 
-### Com Docker Compose (Recomendado)
+### 🐳 Com Docker Compose (Recomendado)
 ```bash
 # Na raiz do projeto
 docker-compose up -d gateway
 ```
 
-### Localmente
+### 💻 Localmente
 ```bash
 # Configurar variáveis de ambiente
 export SERVER_PORT=8080
@@ -64,11 +64,11 @@ export KEYCLOAK_JWK_SET_URI=http://localhost:8180/realms/hospital/protocol/openi
 ./mvnw spring-boot:run
 ```
 
-## Segurança
+## 🔐 Segurança
 
 O Gateway valida todos os tokens JWT recebidos no header `Authorization: Bearer <token>` contra o Keycloak.
 
-### Obter Token
+### 🎫 Obter Token
 ```bash
 curl -X POST http://localhost:8180/realms/hospital/protocol/openid-connect/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -77,42 +77,30 @@ curl -X POST http://localhost:8180/realms/hospital/protocol/openid-connect/token
   -d "grant_type=client_credentials"
 ```
 
-### Usar Token
+### 🔑 Usar Token
 ```bash
 curl -H "Authorization: Bearer <token>" \
   http://localhost:8080/api/schedule/patients
 ```
 
-## Healthcheck
+## ❤️ Healthcheck
 
 ```bash
 curl http://localhost:8080/actuator/health
 ```
 
-## Build
+## 🔨 Build
 
 ```bash
 ./mvnw clean package
 ```
 
-## Logs
+## 📋 Logs
 
-### Docker
+### 🐳 Docker
 ```bash
 docker-compose logs -f gateway
 ```
 
-### Local
+### 💻 Local
 Logs aparecem no console onde o serviço foi executado.
-
-## Troubleshooting
-
-### Gateway não roteia requisições
-1. Verifique se os microsserviços backend estão rodando
-2. Confirme as URLs dos serviços nas variáveis de ambiente
-3. Verifique logs para erros de conexão
-
-### Erro 401 Unauthorized
-1. Verifique se o token JWT é válido
-2. Confirme se o Keycloak está acessível
-3. Valide o KEYCLOAK_ISSUER_URI e KEYCLOAK_JWK_SET_URI

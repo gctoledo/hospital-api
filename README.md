@@ -1,18 +1,29 @@
-# Hospital API
+# 🏥 Hospital API
 
 Sistema de gestão hospitalar baseado em arquitetura de microsserviços, desenvolvido com Spring Boot e Spring Cloud.
 
 ---
 
-## Tecnologias e Versões
+## 📖 Documentação dos Microsserviços
 
-### Backend
+Cada microsserviço possui sua própria documentação detalhada:
+
+- **[🌐 Gateway Service](gateway/README.md)** - API Gateway e roteamento
+- **[📅 Schedule Service](schedule/README.md)** - Agendamentos e pacientes
+- **[👨‍⚕️ Clinic Service](clinic/README.md)** - Consultas e médicos
+- **[🔬 Lab Service](procedures/README.md)** - Exames laboratoriais
+
+---
+
+## 🛠️ Tecnologias e Versões
+
+### 💻 Backend
 - **Java**: 21
 - **Spring Boot**: 3.5.8
 - **Spring Cloud**: 2025.0.0
 - **Maven**: 3.x
 
-### Principais Dependências
+### 📦 Principais Dependências
 - **Spring Cloud Gateway**: API Gateway e roteamento
 - **Spring Security + OAuth2**: Autenticação e autorização
 - **Spring Data JPA**: Persistência de dados
@@ -21,17 +32,17 @@ Sistema de gestão hospitalar baseado em arquitetura de microsserviços, desenvo
 - **Flyway**: Migração de banco de dados
 - **Lombok**: Redução de boilerplate
 
-### Infraestrutura
+### 🔧 Infraestrutura
 - **MySQL**: 8.0
 - **RabbitMQ**: 4.2.0-management
 - **Keycloak**: 23.0.7
 - **Docker & Docker Compose**: Containerização
 
-## Arquitetura
+## 🏗️ Arquitetura
 
 O projeto é composto por 4 microsserviços principais:
 
-### 1. Gateway Service (Porta 8080)
+### 1️⃣ 🌐 Gateway Service (Porta 8080)
 API Gateway responsável por rotear requisições para os microsserviços.
 
 **Rotas:**
@@ -39,7 +50,7 @@ API Gateway responsável por rotear requisições para os microsserviços.
 - `/api/clinic/**` → Clinic Service
 - `/api/lab/**` → Lab Service
 
-### 2. Schedule Service (Porta 8083)
+### 2️⃣ 📅 Schedule Service (Porta 8083)
 Gerencia agendamentos de consultas e exames, além do cadastro de pacientes.
 
 **Principais Endpoints:**
@@ -52,7 +63,7 @@ Gerencia agendamentos de consultas e exames, além do cadastro de pacientes.
 - `PUT /consultations/{id}/update/date` - Atualizar data da consulta
 - `PUT /exams/{id}/update/date` - Atualizar data do exame
 
-### 3. Clinic Service (Porta 8081)
+### 3️⃣ 👨‍⚕️ Clinic Service (Porta 8081)
 Gerencia consultas médicas e médicos.
 
 **Principais Endpoints:**
@@ -64,7 +75,7 @@ Gerencia consultas médicas e médicos.
 - `POST /doctors` - Criar médico (ADMIN)
 - `POST /doctors/available` - Buscar médicos disponíveis
 
-### 4. Lab Service (Porta 8082)
+### 4️⃣ 🔬 Lab Service (Porta 8082)
 Gerencia exames laboratoriais.
 
 **Principais Endpoints:**
@@ -74,9 +85,9 @@ Gerencia exames laboratoriais.
 - `PATCH /exams/{id}/confirm/date` - Confirmar data do exame
 - `PUT /exams/{id}/update/date` - Atualizar data do exame
 
-## Fluxo Principal
+## 🔄 Fluxo Principal
 
-### 1. Agendamento de Consulta
+### 1️⃣ 📅 Agendamento de Consulta
 ```
 Cliente → Gateway → Schedule Service → Clinic Service
                           ↓
@@ -88,7 +99,7 @@ Cliente → Gateway → Schedule Service → Clinic Service
 3. Consulta é criada e confirmação é enviada
 4. Notificação é enviada via RabbitMQ
 
-### 2. Atendimento e Solicitação de Exame
+### 2️⃣ 🩺 Atendimento e Solicitação de Exame
 ```
 Cliente → Gateway → Clinic Service → Lab Service
                           ↓
@@ -100,7 +111,7 @@ Cliente → Gateway → Clinic Service → Lab Service
 3. Reserva de exame é criada no Lab Service
 4. Paciente confirma data do exame via Schedule Service
 
-### 3. Autenticação
+### 3️⃣ 🔐 Autenticação
 ```
 Cliente → Gateway → Keycloak (validação JWT)
             ↓
@@ -109,14 +120,14 @@ Cliente → Gateway → Keycloak (validação JWT)
 
 Todas as requisições passam pelo Gateway que valida o token JWT com o Keycloak.
 
-## Como Executar
+## 🚀 Como Executar
 
-### Pré-requisitos
+### ✅ Pré-requisitos
 - Java 21
 - Maven 3.x
 - Docker e Docker Compose (para execução com containers)
 
-### Executando com Docker (Recomendado)
+### 🐳 Executando com Docker (Recomendado)
 
 1. Clone o repositório:
 ```bash
@@ -154,16 +165,16 @@ docker-compose down
 docker-compose down -v
 ```
 
-### Executando Localmente (sem Docker)
+### 💻 Executando Localmente (sem Docker)
 
-#### 1. Iniciar Infraestrutura
+#### 1️⃣ Iniciar Infraestrutura
 Inicie apenas os bancos de dados, RabbitMQ e Keycloak:
 
 ```bash
 docker-compose up -d rabbitmq schedule-db clinic-db lab-db keycloak-db keycloak
 ```
 
-#### 2. Configurar variáveis de ambiente
+#### 2️⃣ Configurar variáveis de ambiente
 Cada microsserviço precisa das seguintes variáveis (ajuste conforme necessário):
 
 **Schedule Service:**
@@ -227,7 +238,7 @@ export KEYCLOAK_ISSUER_URI=http://localhost:8180/realms/hospital
 export KEYCLOAK_JWK_SET_URI=http://localhost:8180/realms/hospital/protocol/openid-connect/certs
 ```
 
-#### 3. Compilar e executar cada serviço
+#### 3️⃣ Compilar e executar cada serviço
 
 Em terminais separados, execute:
 
@@ -249,11 +260,11 @@ cd gateway
 ./mvnw spring-boot:run
 ```
 
-## Autenticação
+## 🔐 Autenticação
 
 O sistema utiliza Keycloak para autenticação OAuth2/OIDC.
 
-### Obter Token de Acesso
+### 🎫 Obter Token de Acesso
 
 ```bash
 curl -X POST http://localhost:8180/realms/hospital/protocol/openid-connect/token \
@@ -263,16 +274,16 @@ curl -X POST http://localhost:8180/realms/hospital/protocol/openid-connect/token
   -d "grant_type=client_credentials"
 ```
 
-### Usar Token nas Requisições
+### 🔑 Usar Token nas Requisições
 
 ```bash
 curl -H "Authorization: Bearer <seu-token>" \
   http://localhost:8080/api/schedule/patients
 ```
 
-## Documentação da API
+## 📚 Documentação da API
 
-### Postman Collection
+### 📮 Postman Collection
 
 Uma collection completa do Postman está disponível na raiz do projeto no arquivo `hospital-api.postman_collection.json`.
 
@@ -300,13 +311,13 @@ A collection inclui:
 > **ATENÇÃO:** Após realizar a autenticação na rota de Login, será executado o script para preencher a variavel "access_token" automaticamente com o token gerado. Caso não preencha, basta adicionar o token manualmente na variável de ambiente para ser usada pelas outras rotas automaticamente.
 
 
-## Roles e Permissões
+## 👥 Roles e Permissões
 
 - **ADMIN**: Acesso total ao sistema
 - **DOCTOR**: Gerenciar consultas e solicitar exames
 - **PATIENT**: Visualizar e agendar consultas/exames
 
-## Bancos de Dados
+## 💾 Bancos de Dados
 
 Cada microsserviço possui seu próprio banco de dados MySQL:
 
@@ -315,7 +326,7 @@ Cada microsserviço possui seu próprio banco de dados MySQL:
 - **lab-db** (porta 3309): Dados do Lab Service
 - **keycloak-db** (porta 3310): Dados do Keycloak
 
-## Mensageria
+## 📨 Mensageria
 
 RabbitMQ é utilizado para comunicação assíncrona entre serviços:
 
@@ -325,7 +336,7 @@ RabbitMQ é utilizado para comunicação assíncrona entre serviços:
 
 Acesse o RabbitMQ Management em http://localhost:15672 (guest/guest)
 
-## Estrutura do Projeto
+## 📁 Estrutura do Projeto
 
 ```
 hospital-api/
@@ -341,9 +352,9 @@ hospital-api/
 └── README.md                             # Este arquivo
 ```
 
-## Desenvolvimento
+## 💻 Desenvolvimento
 
-### Build de todos os serviços
+### 🔨 Build de todos os serviços
 
 ```bash
 # Schedule
@@ -359,13 +370,13 @@ cd procedures && ./mvnw clean package && cd ..
 cd gateway && ./mvnw clean package && cd ..
 ```
 
-### Rebuild com Docker
+### 🐳 Rebuild com Docker
 
 ```bash
 docker-compose up -d --build
 ```
 
-## Logs
+## 📋 Logs
 
 Para visualizar logs de um serviço específico:
 

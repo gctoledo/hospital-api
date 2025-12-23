@@ -1,8 +1,8 @@
-# Lab Service (Procedures)
+# 🔬 Lab Service (Procedures)
 
 Microsserviço responsável pelo gerenciamento de exames laboratoriais e procedimentos médicos.
 
-## Tecnologias
+## 🛠️ Tecnologias
 
 - Java 21
 - Spring Boot 3.5.8
@@ -12,7 +12,7 @@ Microsserviço responsável pelo gerenciamento de exames laboratoriais e procedi
 - Flyway (migrações)
 - Lombok
 
-## Responsabilidades
+## 📋 Responsabilidades
 
 - Cadastro e gerenciamento de exames
 - Reserva de exames (solicitados por médicos)
@@ -20,7 +20,7 @@ Microsserviço responsável pelo gerenciamento de exames laboratoriais e procedi
 - Atualização de status e resultados
 - Consulta de exames por paciente
 
-## Endpoints
+## 🔌 Endpoints
 
 | Método | Endpoint                        | Descrição                    | Autenticação          |
 |--------|---------------------------------|------------------------------|-----------------------|
@@ -30,7 +30,7 @@ Microsserviço responsável pelo gerenciamento de exames laboratoriais e procedi
 | PATCH  | /exams/{id}/confirm/date        | Confirmar data do exame      | PATIENT, ADMIN        |
 | PUT    | /exams/{id}/update/date         | Atualizar data do exame      | PATIENT, ADMIN        |
 
-## Variáveis de Ambiente
+## ⚙️ Variáveis de Ambiente
 
 | Variável                  | Descrição                           | Padrão                                                     |
 |---------------------------|-------------------------------------|------------------------------------------------------------|
@@ -43,15 +43,15 @@ Microsserviço responsável pelo gerenciamento de exames laboratoriais e procedi
 | KEYCLOAK_TOKEN_URI        | URI de token do Keycloak            | http://localhost:8180/realms/hospital/protocol/openid-connect/token |
 | LAB_CLIENT_SECRET         | Client secret para Keycloak         | IDlJM9G8b8pz5WTkVUylXhNPIqp2w80f                           |
 
-## Como Executar
+## 🚀 Como Executar
 
-### Com Docker Compose (Recomendado)
+### 🐳 Com Docker Compose (Recomendado)
 ```bash
 # Na raiz do projeto
 docker-compose up -d lab
 ```
 
-### Localmente
+### 💻 Localmente
 ```bash
 # 1. Garantir que dependências estão rodando
 docker-compose up -d lab-db keycloak
@@ -62,25 +62,25 @@ docker-compose up -d lab-db keycloak
 ./mvnw spring-boot:run
 ```
 
-## Integrações
+## 🔗 Integrações
 
-### Clinic Service
+### 👨‍⚕️ Clinic Service
 Recebe solicitações de exames durante atendimentos de consultas.
 
-### Schedule Service
+### 📅 Schedule Service
 Comunica atualizações de status e datas de exames.
 
-## Banco de Dados
+## 💾 Banco de Dados
 
 O serviço utiliza MySQL com migrações gerenciadas pelo Flyway.
 
 **Porta:** 3309 (quando rodando via Docker)
 **Database:** lab_db
 
-### Migrations
+### 🗄️ Migrations
 As migrations Flyway estão em: `src/main/resources/db/migration/`
 
-### Seeds (Dados Iniciais)
+### 🌱 Seeds (Dados Iniciais)
 O banco é inicializado automaticamente com 10 procedimentos/exames pré-cadastrados:
 
 1. Ultrassom (30min - Complexidade Padrão)
@@ -94,32 +94,32 @@ O banco é inicializado automaticamente com 10 procedimentos/exames pré-cadastr
 9. Colonoscopia (45min - Alta Complexidade)
 10. Eletrocardiograma (15min - Complexidade Padrão)
 
-## Fluxo de Exames
+## 🔄 Fluxo de Exames
 
-### 1. Reserva de Exame (pelo médico)
+### 1️⃣ Reserva de Exame (pelo médico)
 ```
 Clinic Service → Lab Service (POST /exams/reserve)
 Status: RESERVED (aguardando confirmação do paciente)
 ```
 
-### 2. Confirmação pelo Paciente
+### 2️⃣ Confirmação pelo Paciente
 ```
 Paciente → Schedule Service → Lab Service (PATCH /exams/{id}/confirm/date)
 Status: SCHEDULED (agendado)
 ```
 
-### 3. Realização do Exame
+### 3️⃣ Realização do Exame
 ```
 Laboratório realiza o exame
 Status: COMPLETED
 ```
 
-### 4. Resultado Disponível
+### 4️⃣ Resultado Disponível
 ```
 Resultado é publicado e disponibilizado para consulta
 ```
 
-## Tipos de Exames
+## 🧬 Tipos de Exames
 
 Exemplos de exames suportados:
 - Exames de sangue (hemograma, glicemia, etc.)
@@ -128,9 +128,9 @@ Exemplos de exames suportados:
 - Exames de urina e fezes
 - E outros conforme necessidade
 
-## Exemplo de Uso
+## 📝 Exemplo de Uso
 
-### Reservar Exame (Médico)
+### 🔬 Reservar Exame (Médico)
 ```bash
 curl -X POST http://localhost:8082/exams/reserve \
   -H "Authorization: Bearer <token-doctor>" \
@@ -143,7 +143,7 @@ curl -X POST http://localhost:8082/exams/reserve \
   }'
 ```
 
-### Confirmar Data (Paciente)
+### ✅ Confirmar Data (Paciente)
 ```bash
 curl -X PATCH http://localhost:8082/exams/1/confirm/date \
   -H "Authorization: Bearer <token>" \
@@ -153,13 +153,13 @@ curl -X PATCH http://localhost:8082/exams/1/confirm/date \
   }'
 ```
 
-### Buscar Exames do Paciente
+### 🔍 Buscar Exames do Paciente
 ```bash
 curl -X GET http://localhost:8082/exams/patient/12345678900 \
   -H "Authorization: Bearer <token>"
 ```
 
-### Criar Exame Diretamente (Paciente ou Admin)
+### 📋 Criar Exame Diretamente (Paciente ou Admin)
 ```bash
 curl -X POST http://localhost:8082/exams \
   -H "Authorization: Bearer <token>" \
@@ -171,7 +171,7 @@ curl -X POST http://localhost:8082/exams \
   }'
 ```
 
-### Atualizar Data do Exame
+### 🔄 Atualizar Data do Exame
 ```bash
 curl -X PUT http://localhost:8082/exams/1/update/date \
   -H "Authorization: Bearer <token>" \
@@ -181,7 +181,7 @@ curl -X PUT http://localhost:8082/exams/1/update/date \
   }'
 ```
 
-## Status de Exames
+## 📊 Status de Exames
 
 - **RESERVED**: Reservado pelo médico, aguardando confirmação
 - **SCHEDULED**: Confirmado pelo paciente, agendado
@@ -189,21 +189,15 @@ curl -X PUT http://localhost:8082/exams/1/update/date \
 - **COMPLETED**: Exame concluído
 - **CANCELLED**: Exame cancelado
 
-## Build
+## 🔨 Build
 
 ```bash
 ./mvnw clean package
 ```
 
-## Testes
+## 📋 Logs
 
-```bash
-./mvnw test
-```
-
-## Logs
-
-### Docker
+### 🐳 Docker
 ```bash
 docker-compose logs -f lab
 ```

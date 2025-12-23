@@ -1,8 +1,8 @@
-# Schedule Service
+# 📅 Schedule Service
 
 Microsserviço responsável pelo gerenciamento de agendamentos de consultas e exames, além do cadastro de pacientes.
 
-## Tecnologias
+## 🛠️ Tecnologias
 
 - Java 21
 - Spring Boot 3.5.8
@@ -14,7 +14,7 @@ Microsserviço responsável pelo gerenciamento de agendamentos de consultas e ex
 - Flyway (migrações)
 - Lombok
 
-## Responsabilidades
+## 📋 Responsabilidades
 
 - Cadastro e gerenciamento de pacientes
 - Agendamento de consultas (integração com Clinic Service)
@@ -22,9 +22,9 @@ Microsserviço responsável pelo gerenciamento de agendamentos de consultas e ex
 - Atualização de datas de agendamentos
 - Consulta de agendamentos por CPF
 
-## Endpoints
+## 🔌 Endpoints
 
-### Pacientes
+### 👤 Pacientes
 
 | Método | Endpoint          | Descrição                | Autenticação        |
 |--------|-------------------|--------------------------|---------------------|
@@ -33,7 +33,7 @@ Microsserviço responsável pelo gerenciamento de agendamentos de consultas e ex
 | POST   | /patients         | Criar paciente           | ADMIN               |
 | PUT    | /patients/{id}    | Atualizar paciente       | ADMIN               |
 
-### Agendamentos
+### 📅 Agendamentos
 
 | Método | Endpoint                           | Descrição                      | Autenticação          |
 |--------|------------------------------------|--------------------------------|-----------------------|
@@ -44,7 +44,7 @@ Microsserviço responsável pelo gerenciamento de agendamentos de consultas e ex
 | PUT    | /consultations/{id}/update/date    | Atualizar data da consulta     | PATIENT, DOCTOR, ADMIN|
 | PUT    | /exams/{id}/update/date            | Atualizar data do exame        | PATIENT, DOCTOR, ADMIN|
 
-## Variáveis de Ambiente
+## ⚙️ Variáveis de Ambiente
 
 | Variável                  | Descrição                           | Padrão                                                     |
 |---------------------------|-------------------------------------|------------------------------------------------------------|
@@ -63,15 +63,15 @@ Microsserviço responsável pelo gerenciamento de agendamentos de consultas e ex
 | RABBITMQ_USERNAME         | Usuário RabbitMQ                    | guest                                                      |
 | RABBITMQ_PASSWORD         | Senha RabbitMQ                      | guest                                                      |
 
-## Como Executar
+## 🚀 Como Executar
 
-### Com Docker Compose (Recomendado)
+### 🐳 Com Docker Compose (Recomendado)
 ```bash
 # Na raiz do projeto
 docker-compose up -d schedule
 ```
 
-### Localmente
+### 💻 Localmente
 ```bash
 # 1. Garantir que dependências estão rodando
 docker-compose up -d schedule-db rabbitmq keycloak
@@ -82,31 +82,31 @@ docker-compose up -d schedule-db rabbitmq keycloak
 ./mvnw spring-boot:run
 ```
 
-## Integrações
+## 🔗 Integrações
 
-### Clinic Service (via OpenFeign)
+### 👨‍⚕️ Clinic Service (via OpenFeign)
 - Reserva de consultas
 - Atualização de datas de consultas
 
-### Lab Service (via OpenFeign)
+### 🔬 Lab Service (via OpenFeign)
 - Reserva de exames
 - Atualização de datas de exames
 
-### RabbitMQ
+### 📨 RabbitMQ
 - Publicação de eventos de agendamento
 - Consumo de atualizações de status
 
-## Banco de Dados
+## 💾 Banco de Dados
 
 O serviço utiliza MySQL com migrações gerenciadas pelo Flyway.
 
 **Porta:** 3307 (quando rodando via Docker)
 **Database:** schedule_db
 
-### Migrations
+### 🗄️ Migrations
 As migrations Flyway estão em: `src/main/resources/db/migration/`
 
-### Seeds (Dados Iniciais)
+### 🌱 Seeds (Dados Iniciais)
 O banco é inicializado automaticamente com 5 pacientes de exemplo:
 - Gabriel Costa Toledo (CPF: 00875560067)
 - João Pedro Oliveira (CPF: 23456789012)
@@ -114,9 +114,9 @@ O banco é inicializado automaticamente com 5 pacientes de exemplo:
 - Carlos Eduardo Lima (CPF: 45678901234)
 - Patricia Fernandes Costa (CPF: 56789012345)
 
-## Exemplo de Uso
+## 📝 Exemplo de Uso
 
-### Criar Paciente
+### 👤 Criar Paciente
 ```bash
 curl -X POST http://localhost:8083/patients \
   -H "Authorization: Bearer <token-admin>" \
@@ -129,7 +129,7 @@ curl -X POST http://localhost:8083/patients \
   }'
 ```
 
-### Agendar Consulta
+### 📅 Agendar Consulta
 ```bash
 curl -X POST http://localhost:8083/consultations \
   -H "Authorization: Bearer <token>" \
@@ -142,27 +142,21 @@ curl -X POST http://localhost:8083/consultations \
   }'
 ```
 
-### Buscar Consultas por CPF
+### 🔍 Buscar Consultas por CPF
 ```bash
 curl -X GET http://localhost:8083/consultations/12345678900 \
   -H "Authorization: Bearer <token>"
 ```
 
-## Build
+## 🔨 Build
 
 ```bash
 ./mvnw clean package
 ```
 
-## Testes
+## 📋 Logs
 
-```bash
-./mvnw test
-```
-
-## Logs
-
-### Docker
+### 🐳 Docker
 ```bash
 docker-compose logs -f schedule
 ```

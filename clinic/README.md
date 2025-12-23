@@ -1,8 +1,8 @@
-# Clinic Service
+# 👨‍⚕️ Clinic Service
 
 Microsserviço responsável pelo gerenciamento de consultas médicas e cadastro de médicos.
 
-## Tecnologias
+## 🛠️ Tecnologias
 
 - Java 21
 - Spring Boot 3.5.8
@@ -14,7 +14,7 @@ Microsserviço responsável pelo gerenciamento de consultas médicas e cadastro 
 - Flyway (migrações)
 - Lombok
 
-## Responsabilidades
+## 📋 Responsabilidades
 
 - Cadastro e gerenciamento de médicos
 - Reserva e gerenciamento de consultas
@@ -22,9 +22,9 @@ Microsserviço responsável pelo gerenciamento de consultas médicas e cadastro 
 - Verificação de disponibilidade de médicos
 - Solicitação de exames durante atendimento
 
-## Endpoints
+## 🔌 Endpoints
 
-### Médicos
+### 👨‍⚕️ Médicos
 
 | Método | Endpoint                  | Descrição                      | Autenticação        |
 |--------|---------------------------|--------------------------------|---------------------|
@@ -34,7 +34,7 @@ Microsserviço responsável pelo gerenciamento de consultas médicas e cadastro 
 | POST   | /doctors/available        | Buscar médicos disponíveis     | Qualquer autenticado|
 | PUT    | /doctors/{id}             | Atualizar médico               | ADMIN               |
 
-### Consultas
+### 🩺 Consultas
 
 | Método | Endpoint                        | Descrição                    | Autenticação          |
 |--------|---------------------------------|------------------------------|-----------------------|
@@ -44,7 +44,7 @@ Microsserviço responsável pelo gerenciamento de consultas médicas e cadastro 
 | POST   | /consultations/{id}/attend      | Atender consulta             | PATIENT, DOCTOR, ADMIN|
 | PUT    | /consultations/{id}/update/date | Atualizar data da consulta   | PATIENT, DOCTOR, ADMIN|
 
-## Variáveis de Ambiente
+## ⚙️ Variáveis de Ambiente
 
 | Variável                  | Descrição                           | Padrão                                                     |
 |---------------------------|-------------------------------------|------------------------------------------------------------|
@@ -62,15 +62,15 @@ Microsserviço responsável pelo gerenciamento de consultas médicas e cadastro 
 | RABBITMQ_USERNAME         | Usuário RabbitMQ                    | guest                                                      |
 | RABBITMQ_PASSWORD         | Senha RabbitMQ                      | guest                                                      |
 
-## Como Executar
+## 🚀 Como Executar
 
-### Com Docker Compose (Recomendado)
+### 🐳 Com Docker Compose (Recomendado)
 ```bash
 # Na raiz do projeto
 docker-compose up -d clinic
 ```
 
-### Localmente
+### 💻 Localmente
 ```bash
 # 1. Garantir que dependências estão rodando
 docker-compose up -d clinic-db rabbitmq keycloak
@@ -81,27 +81,27 @@ docker-compose up -d clinic-db rabbitmq keycloak
 ./mvnw spring-boot:run
 ```
 
-## Integrações
+## 🔗 Integrações
 
-### Lab Service (via OpenFeign)
+### 🔬 Lab Service (via OpenFeign)
 Durante o atendimento de uma consulta, o médico pode solicitar exames. O Clinic Service se comunica com o Lab Service para reservar os exames necessários.
 
-### RabbitMQ
+### 📨 RabbitMQ
 - Publicação de eventos de consulta realizada
 - Consumo de atualizações de status
 - Notificações de agendamento
 
-## Banco de Dados
+## 💾 Banco de Dados
 
 O serviço utiliza MySQL com migrações gerenciadas pelo Flyway.
 
 **Porta:** 3308 (quando rodando via Docker)
 **Database:** clinic_db
 
-### Migrations
+### 🗄️ Migrations
 As migrations Flyway estão em: `src/main/resources/db/migration/`
 
-### Seeds (Dados Iniciais)
+### 🌱 Seeds (Dados Iniciais)
 O banco é inicializado automaticamente com dados de exemplo:
 
 **Médicos:**
@@ -115,7 +115,7 @@ O banco é inicializado automaticamente com dados de exemplo:
 
 **Relacionamentos:** Mapeamento completo entre doenças e sintomas com níveis de especificidade para auxiliar no diagnóstico
 
-## Fluxo de Atendimento
+## 🔄 Fluxo de Atendimento
 
 1. Consulta é agendada via Schedule Service
 2. Médico acessa a consulta
@@ -128,7 +128,7 @@ O banco é inicializado automaticamente com dados de exemplo:
 5. Consulta é marcada como atendida
 6. Evento é publicado no RabbitMQ
 
-## Especialidades Disponíveis
+## 🏥 Especialidades Disponíveis
 
 - CARDIOLOGY (Cardiologia)
 - DERMATOLOGY (Dermatologia)
@@ -137,9 +137,9 @@ O banco é inicializado automaticamente com dados de exemplo:
 - NEUROLOGY (Neurologia)
 - E outras conforme configuração
 
-## Exemplo de Uso
+## 📝 Exemplo de Uso
 
-### Criar Médico
+### 👨‍⚕️ Criar Médico
 ```bash
 curl -X POST http://localhost:8081/doctors \
   -H "Authorization: Bearer <token-admin>" \
@@ -153,7 +153,7 @@ curl -X POST http://localhost:8081/doctors \
   }'
 ```
 
-### Buscar Médicos Disponíveis
+### 🔍 Buscar Médicos Disponíveis
 ```bash
 curl -X POST http://localhost:8081/doctors/available \
   -H "Authorization: Bearer <token>" \
@@ -164,7 +164,7 @@ curl -X POST http://localhost:8081/doctors/available \
   }'
 ```
 
-### Reservar Consulta
+### 📅 Reservar Consulta
 ```bash
 curl -X POST http://localhost:8081/consultations/reserve \
   -H "Authorization: Bearer <token>" \
@@ -177,7 +177,7 @@ curl -X POST http://localhost:8081/consultations/reserve \
   }'
 ```
 
-### Atender Consulta
+### 🩺 Atender Consulta
 ```bash
 curl -X POST http://localhost:8081/consultations/1/attend \
   -H "Authorization: Bearer <token>" \
@@ -190,27 +190,21 @@ curl -X POST http://localhost:8081/consultations/1/attend \
   }'
 ```
 
-### Listar Consultas por Especialidade
+### 📋 Listar Consultas por Especialidade
 ```bash
 curl -X GET "http://localhost:8081/consultations?specialty=CARDIOLOGY" \
   -H "Authorization: Bearer <token>"
 ```
 
-## Build
+## 🔨 Build
 
 ```bash
 ./mvnw clean package
 ```
 
-## Testes
+## 📋 Logs
 
-```bash
-./mvnw test
-```
-
-## Logs
-
-### Docker
+### 🐳 Docker
 ```bash
 docker-compose logs -f clinic
 ```
