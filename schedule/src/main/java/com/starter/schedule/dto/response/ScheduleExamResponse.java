@@ -1,12 +1,9 @@
 package com.starter.schedule.dto.response;
 
-import java.time.LocalDateTime;
+import com.starter.schedule.dto.response.external.ExamResponse;
 
 public record ScheduleExamResponse(
-        Long id,
-        String procedureName,
-        LocalDateTime startDateTime,
-        LocalDateTime endDateTime,
+        ExamResponse exam,
         String message
 ) {
 }

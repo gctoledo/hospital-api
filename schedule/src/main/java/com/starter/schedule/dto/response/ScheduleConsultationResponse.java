@@ -1,7 +1,9 @@
 package com.starter.schedule.dto.response;
 
+import com.starter.schedule.dto.response.external.ConsultationResponse;
+
 public record ScheduleConsultationResponse(
-        Long id,
+        ConsultationResponse consultation,
         String message
 ) {
 }

@@ -2,10 +2,11 @@ package com.starter.schedule.controller;
 
 import com.starter.schedule.dto.request.ScheduleConsultationRequest;
 import com.starter.schedule.dto.request.ScheduleExamRequest;
-import com.starter.schedule.dto.request.external.UpdateScheduleDateRequest;
+import com.starter.schedule.dto.request.external.UpdateDateRequest;
 import com.starter.schedule.dto.response.ScheduleConsultationResponse;
 import com.starter.schedule.dto.response.ScheduleExamResponse;
 import com.starter.schedule.dto.response.external.ConsultationResponse;
+import com.starter.schedule.dto.response.external.ExamResponse;
 import com.starter.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,25 +31,41 @@ public class ScheduleController {
     }
 
     @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR', 'ADMIN')")
+    @GetMapping("/exams/{cpf}")
+    public ResponseEntity<List<ExamResponse>> findExamsByCpf(@PathVariable String cpf) {
+        var response = scheduleService.findExamsByCpf(cpf);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR', 'ADMIN')")
     @PostMapping("/consultations")
-    public ResponseEntity<ScheduleConsultationResponse> createConsultation(@Valid @RequestBody ScheduleConsultationRequest request) {
-        var response = scheduleService.createConsultation(request);
+    public ResponseEntity<ScheduleConsultationResponse> scheduleConsultation(@Valid @RequestBody ScheduleConsultationRequest request) {
+        var response = scheduleService.scheduleConsultation(request);
 
         return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR', 'ADMIN')")
     @PostMapping("/exams")
-    public ResponseEntity<ScheduleExamResponse> createExam(@Valid @RequestBody ScheduleExamRequest request) {
-        var response = scheduleService.createExam(request);
+    public ResponseEntity<ScheduleExamResponse> scheduleExam(@Valid @RequestBody ScheduleExamRequest request) {
+        var response = scheduleService.scheduleExam(request);
 
         return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR', 'ADMIN')")
     @PutMapping("/consultations/{id}/update/date")
-    public ResponseEntity<ScheduleConsultationResponse> updateConsultationDate(@PathVariable Long id, @Valid @RequestBody UpdateScheduleDateRequest request) {
+    public ResponseEntity<ScheduleConsultationResponse> updateConsultationDate(@PathVariable Long id, @Valid @RequestBody UpdateDateRequest request) {
         var response = scheduleService.updateConsultationDate(id, request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR', 'ADMIN')")
+    @PutMapping("/exams/{id}/update/date")
+    public ResponseEntity<ScheduleExamResponse> updateExamDate(@PathVariable Long id, @Valid @RequestBody UpdateDateRequest request) {
+        var response = scheduleService.updateExamDate(id, request);
 
         return ResponseEntity.ok(response);
     }

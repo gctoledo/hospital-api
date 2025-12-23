@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDateTime;
 
-public record CreateExamRequest(
+public record ExamRequest(
         @NotBlank(message = "CPF do paciente deve ser informado")
         @Pattern(regexp = "\\d{11}", message = "CPF deve ter 11 dígitos")
         String patientCpf,

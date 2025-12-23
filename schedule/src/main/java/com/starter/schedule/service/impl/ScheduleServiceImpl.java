@@ -6,11 +6,12 @@ import com.starter.schedule.dto.request.PatientRequest;
 import com.starter.schedule.dto.request.ScheduleConsultationRequest;
 import com.starter.schedule.dto.request.ScheduleExamRequest;
 import com.starter.schedule.dto.request.external.ConsultationReserveRequest;
-import com.starter.schedule.dto.request.external.CreateExamRequest;
-import com.starter.schedule.dto.request.external.UpdateScheduleDateRequest;
+import com.starter.schedule.dto.request.external.ExamRequest;
+import com.starter.schedule.dto.request.external.UpdateDateRequest;
 import com.starter.schedule.dto.response.ScheduleConsultationResponse;
 import com.starter.schedule.dto.response.ScheduleExamResponse;
 import com.starter.schedule.dto.response.external.ConsultationResponse;
+import com.starter.schedule.dto.response.external.ExamResponse;
 import com.starter.schedule.entity.Patient;
 import com.starter.schedule.exception.BadRequestException;
 import com.starter.schedule.exception.ConflictException;
@@ -48,8 +49,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public List<ExamResponse> findExamsByCpf(String cpf) {
+        patientRepository.findByCpf(cpf)
+                .orElseThrow(() -> new ResourceNotFoundException("Não existe paciente cadastrado com esse CPF"));
+
+        return labClient.findExamsByCpf(cpf);
+    }
+
+    @Override
     @Transactional
-    public ScheduleConsultationResponse createConsultation(ScheduleConsultationRequest request) {
+    public ScheduleConsultationResponse scheduleConsultation(ScheduleConsultationRequest request) {
         var patient = findOrCreatePatient(request.patient());
 
         try {
@@ -68,7 +77,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             scheduleProducer.sendConsultationRequest(createConsultationEvent);
 
             return new ScheduleConsultationResponse(
-                    reservation.id(),
+                    reservation,
                     String.format("A consulta para o paciente %s foi reservada para %s",
                             request.patient().name(),
                             DateFormatter.format(request.dateTime())
@@ -85,28 +94,25 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleExamResponse createExam(ScheduleExamRequest request) {
+    public ScheduleExamResponse scheduleExam(ScheduleExamRequest request) {
         var patient = findOrCreatePatient(request.patient());
 
         try {
-            var examRequest = new CreateExamRequest(
+            var examRequest = new ExamRequest(
                     patient.getCpf(),
                     request.procedureName(),
                     request.dateTime()
             );
 
-            var response = labClient.createExam(examRequest);
+            ExamResponse exam = labClient.createExam(examRequest);
 
             return new ScheduleExamResponse(
-                    response.examId(),
-                    response.procedureName(),
-                    response.startDateTime(),
-                    response.endDateTime(),
+                    exam,
                     String.format(
                             "%s agendado para %s na data %s.",
-                            response.procedureName(),
+                            exam.procedureName(),
                             patient.getName(),
-                            DateFormatter.format(response.startDateTime())
+                            DateFormatter.format(exam.startDateTime())
                     )
             );
         } catch (FeignException.BadRequest ex) {
@@ -119,14 +125,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleConsultationResponse updateConsultationDate(Long id, UpdateScheduleDateRequest request) {
+    public ScheduleConsultationResponse updateConsultationDate(Long id, UpdateDateRequest request) {
         try {
-            var response = clinicClient.updateConsultationDate(id, request);
+            var consultation = clinicClient.updateConsultationDate(id, request);
 
             return new ScheduleConsultationResponse(
-                    response.id(),
+                    consultation,
                     String.format("A data da consulta foi alterada para %s",
-                            DateFormatter.format(response.startDateTime())
+                            DateFormatter.format(consultation.startDateTime())
                     )
             );
         } catch (FeignException.NotFound ex) {
@@ -137,6 +143,25 @@ public class ScheduleServiceImpl implements ScheduleService {
                             DateFormatter.format(request.dateTime())
                     )
             );
+        }
+
+    }
+
+    @Override
+    public ScheduleExamResponse updateExamDate(Long id, UpdateDateRequest request) {
+        try {
+            var exam = labClient.updateExamDate(id, request);
+
+            return new ScheduleExamResponse(
+                    exam,
+                    String.format("A data do exame foi alterado para %s",
+                            DateFormatter.format(exam.startDateTime())
+                    )
+            );
+        } catch (FeignException.NotFound ex) {
+            throw new ResourceNotFoundException("Exame não encontrado");
+        } catch (FeignException.Conflict ex) {
+            throw new ConflictException("Já existe um exame agendado para este procedimento no horário solicitado");
         }
 
     }
