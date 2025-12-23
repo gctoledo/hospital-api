@@ -2072,11 +2072,11 @@
 	"variable": [
 		{
 			"key": "GATEWAY_BASEURL",
-			"value": ""
+			"value": "http://localhost:8080/api"
 		},
 		{
 			"key": "KEYCLOAK_URL",
-			"value": ""
+			"value": "http://localhost:8180"
 		},
 		{
 			"key": "access_token",

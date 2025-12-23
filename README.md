@@ -120,7 +120,7 @@ Todas as requisições passam pelo Gateway que valida o token JWT com o Keycloak
 
 1. Clone o repositório:
 ```bash
-git clone <repository-url>
+git clone https://git.gft.com/gltd/hospital-api
 cd hospital-api
 ```
 
@@ -279,21 +279,26 @@ Uma collection completa do Postman está disponível na raiz do projeto no arqui
 A collection inclui:
 - Todas as rotas de todos os microsserviços
 - Exemplos de requisições configuradas
-- Variáveis de ambiente pré-configuradas
+- Variáveis pré-configuradas
 - Exemplos de autenticação com Keycloak
 - Requests organizados por serviço (Gateway, Schedule, Clinic, Lab)
+
+> **ATENÇÃO:** As variaveis foram configuradas DENTRO da Collection, e não nas variaveis de ambiente do Workspace.
 
 #### Como usar:
 
 1. Abra o Postman
 2. Clique em "Import"
-3. Selecione o arquivo `hospital-api.postman_collection.json` da raiz do projeto
-4. Configure as variáveis de ambiente:
-   - `base_url`: http://localhost:8080 (Gateway)
-   - `keycloak_url`: http://localhost:8180
-   - `access_token`: (será preenchido automaticamente após autenticação)
+3. Selecione o arquivo `Hospital-API.postman_collection.json` da raiz do projeto
+4. Verifique se as variáveis de ambiente estão configuradas:
+   - `GATEWAY_BASEURL`: http://localhost:8080/api (Gateway)
+   - `KEYCLOAK_URL`: http://localhost:8180
+   - `access_token`: (será preenchido após autenticação)
 5. Execute o request de autenticação para obter o token
 6. Use as demais requisições já configuradas
+
+> **ATENÇÃO:** Após realizar a autenticação na rota de Login, será executado o script para preencher a variavel "access_token" automaticamente com o token gerado. Caso não preencha, basta adicionar o token manualmente na variável de ambiente para ser usada pelas outras rotas automaticamente.
+
 
 ## Roles e Permissões
 
