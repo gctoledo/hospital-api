@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "7cc1f38e-67f4-44fb-8e7b-6afaa771e5d8",
+		"_postman_id": "e3cb7198-e794-42ba-a5af-88682b6b2f18",
 		"name": "Hospital-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "30266003"
@@ -91,7 +91,113 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "gateway-client",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "oZes67OGtU9UEs0U7AusaKEw7BkzBiCc",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "admin1",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "password",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{KEYCLOAK_URL}}/realms/hospital/protocol/openid-connect/token",
+									"host": [
+										"{{KEYCLOAK_URL}}"
+									],
+									"path": [
+										"realms",
+										"hospital",
+										"protocol",
+										"openid-connect",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "KEYCLOAK_LOCALE=; Version=1; Comment=Expiring cookie; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Max-Age=0; Path=/realms/hospital/; HttpOnly"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "KC_RESTART=; Version=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Max-Age=0; Path=/realms/hospital/; HttpOnly"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "KC_AUTH_STATE=; Version=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Max-Age=0; Path=/realms/hospital/"
+								},
+								{
+									"key": "content-length",
+									"value": "2300"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJlSzF5VzU4SDU5SHFLWW4zVUZUbTZQZ2cteG5KWUVXSFFxNzBOVElycmxJIn0.eyJleHAiOjE3NjY1MzM0MzUsImlhdCI6MTc2NjUzMzEzNSwianRpIjoiYWQzMTI5NmUtYjQ5NS00ZjNmLWIyODEtODQyNjkwYjBjMzBjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTgwL3JlYWxtcy9ob3NwaXRhbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiIxZDJjMmRhZi04ZDljLTQyY2QtYmZkZC0yZjJmN2U2MjhkMmYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJnYXRld2F5LWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiI4MWY2OTZhOC1iOGY2LTRkNDctOTZkZS05OWRiZWFjNWE2NjYiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWhvc3BpdGFsIiwiQURNSU4iLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjgxZjY5NmE4LWI4ZjYtNGQ0Ny05NmRlLTk5ZGJlYWM1YTY2NiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkFkbWluIEFkbWluIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYWRtaW4xIiwiZ2l2ZW5fbmFtZSI6IkFkbWluIiwiZmFtaWx5X25hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIn0.QNEu65V4WRETZaBzMoZs0VyVKaxc3pDPrx9H1oq13sQne71xFHYVoC2viWDkqJJP_QTTw-fDbWUQWFkG-WxMv4vx_FGF2TYTrGqrjhDRzmJLp9bGxk00kqdX9anO7q8Qvvr9k3lGs7oeP72mHdgU50oyhN9CxVMPD9rCzEUo8f4f4lhuzmLfLUCFLaBBC_6wbEx0a_DiobuBWobMvCV09V8Q0pZ4WRZbzz56kk-jywQqJAqYxiqqSd-S5ERiAbto6w784Vp2wKzx9NMxeZzvmwi2set5rIa_ogjzF5o4cdHnnQy34zPK5cKz3BhBFem-873MrEurN0Y8GaM_y4cg-w\",\n    \"expires_in\": 300,\n    \"refresh_expires_in\": 1800,\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0MmM5OTFkZC1kN2RkLTQ1ODQtYTg1MS1mNGIxOThiYjcxNGUifQ.eyJleHAiOjE3NjY1MzQ5MzUsImlhdCI6MTc2NjUzMzEzNSwianRpIjoiOGViZWUxNzEtZmUzMi00YzU4LWEyZjMtZGVmZDFlMjA2MGMyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTgwL3JlYWxtcy9ob3NwaXRhbCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODE4MC9yZWFsbXMvaG9zcGl0YWwiLCJzdWIiOiIxZDJjMmRhZi04ZDljLTQyY2QtYmZkZC0yZjJmN2U2MjhkMmYiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoiZ2F0ZXdheS1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiODFmNjk2YTgtYjhmNi00ZDQ3LTk2ZGUtOTlkYmVhYzVhNjY2Iiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiODFmNjk2YTgtYjhmNi00ZDQ3LTk2ZGUtOTlkYmVhYzVhNjY2In0.ZXIAzgPaUxrbiL3-3fntyZ81dWPlLQkPpHfwIweIWGg\",\n    \"token_type\": \"Bearer\",\n    \"not-before-policy\": 0,\n    \"session_state\": \"81f696a8-b8f6-4d47-96de-99dbeac5a666\",\n    \"scope\": \"profile email\"\n}"
+						}
+					]
 				}
 			]
 		},
@@ -151,7 +257,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -187,7 +293,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 14:57:59 GMT"
+											"value": "Tue, 23 Dec 2025 23:39:06 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -235,7 +341,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -271,7 +377,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 14:55:05 GMT"
+											"value": "Tue, 23 Dec 2025 23:39:12 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -337,7 +443,7 @@
 									},
 									"status": "Created",
 									"code": 201,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -373,7 +479,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 14:59:28 GMT"
+											"value": "Tue, 23 Dec 2025 23:39:17 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -387,15 +493,12 @@
 						},
 						{
 							"name": "Update Patient",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
-								"method": "GET",
+								"method": "PUT",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Danilo Silva\",\r\n    \"cpf\": \"05384987654\",\r\n    \"birthDate\": \"1978-10-16\",\r\n    \"gender\": \"MALE\",\r\n    \"phone\": \"111111111111\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Danilo Silva\",\r\n    \"cpf\": \"05384987656\",\r\n    \"birthDate\": \"1978-10-16\",\r\n    \"gender\": \"MALE\",\r\n    \"phone\": \"11111111111\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -415,7 +518,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "1"
+											"value": "2"
 										}
 									]
 								},
@@ -425,8 +528,17 @@
 								{
 									"name": "Update Patient",
 									"originalRequest": {
-										"method": "GET",
+										"method": "PUT",
 										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Danilo Silva\",\r\n    \"cpf\": \"05384987656\",\r\n    \"birthDate\": \"1978-10-16\",\r\n    \"gender\": \"MALE\",\r\n    \"phone\": \"11111111111\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
 										"url": {
 											"raw": "{{GATEWAY_BASEURL}}/schedule/patients/:id",
 											"host": [
@@ -440,14 +552,14 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "6"
+													"value": "1"
 												}
 											]
 										}
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -483,7 +595,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:00:02 GMT"
+											"value": "Tue, 23 Dec 2025 23:39:54 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -491,7 +603,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"id\": 6,\n    \"name\": \"Danilo Silva\",\n    \"cpf\": \"05384987654\",\n    \"birthDate\": \"1978-10-16\",\n    \"gender\": \"MALE\",\n    \"phone\": \"11111111111\"\n}"
+									"body": "{\n    \"id\": 1,\n    \"name\": \"Danilo Silva\",\n    \"cpf\": \"05384987656\",\n    \"birthDate\": \"1978-10-16\",\n    \"gender\": \"MALE\",\n    \"phone\": \"11111111111\"\n}"
 								}
 							]
 						}
@@ -550,7 +662,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -586,7 +698,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:01:41 GMT"
+											"value": "Tue, 23 Dec 2025 23:47:58 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -594,7 +706,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "[\n    {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 2,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    }\n]"
+									"body": "[\n    {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    }\n]"
 								}
 							]
 						},
@@ -652,7 +764,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -688,7 +800,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:02:38 GMT"
+											"value": "Tue, 23 Dec 2025 23:41:19 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -696,7 +808,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"consultation\": {\n        \"id\": 3,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Reservado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    },\n    \"message\": \"A consulta para o paciente Gabriel Toledo foi reservada para 25/05/2026 às 19:00\"\n}"
+									"body": "{\n    \"consultation\": {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Reservado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    },\n    \"message\": \"A consulta para o paciente Gabriel Toledo foi reservada para 25/05/2026 às 19:00\"\n}"
 								}
 							]
 						},
@@ -765,14 +877,14 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "3"
+													"value": "1"
 												}
 											]
 										}
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -808,7 +920,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:04:56 GMT"
+											"value": "Tue, 23 Dec 2025 23:41:25 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -816,7 +928,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"consultation\": {\n        \"id\": 3,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-25T19:00:00\"\n    },\n    \"message\": \"A data da consulta foi alterada para 25/06/2026 às 19:00\"\n}"
+									"body": "{\n    \"consultation\": {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-25T19:00:00\"\n    },\n    \"message\": \"A data da consulta foi alterada para 25/06/2026 às 19:00\"\n}"
 								}
 							]
 						}
@@ -875,7 +987,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -911,7 +1023,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:06:47 GMT"
+											"value": "Tue, 23 Dec 2025 23:48:14 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -919,7 +1031,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "[\n    {\n        \"examId\": 1,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2025-12-26T20:00:00\"\n    },\n    {\n        \"examId\": 2,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Cancelado\",\n        \"startDateTime\": null\n    }\n]"
+									"body": "[\n    {\n        \"examId\": 1,\n        \"procedureName\": \"Ultrassom\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    }\n]"
 								}
 							]
 						},
@@ -977,7 +1089,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -1013,7 +1125,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:07:59 GMT"
+											"value": "Tue, 23 Dec 2025 23:41:55 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -1021,7 +1133,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"exam\": {\n        \"examId\": 3,\n        \"procedureName\": \"Ultrassom\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    },\n    \"message\": \"Ultrassom agendado para Gabriel Costa Toledo na data 25/05/2026 às 19:00.\"\n}"
+									"body": "{\n    \"exam\": {\n        \"examId\": 1,\n        \"procedureName\": \"Ultrassom\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    },\n    \"message\": \"Ultrassom agendado para Gabriel Toledo na data 25/05/2026 às 19:00.\"\n}"
 								}
 							]
 						},
@@ -1097,7 +1209,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -1133,7 +1245,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:09:02 GMT"
+											"value": "Tue, 23 Dec 2025 23:42:07 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -1141,7 +1253,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"exam\": {\n        \"examId\": 1,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-26T19:00:00\"\n    },\n    \"message\": \"A data do exame foi alterado para 26/06/2026 às 19:00\"\n}"
+									"body": "{\n    \"exam\": {\n        \"examId\": 1,\n        \"procedureName\": \"Ultrassom\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-26T19:00:00\"\n    },\n    \"message\": \"A data do exame foi alterado para 26/06/2026 às 19:00\"\n}"
 								}
 							]
 						}
@@ -1205,7 +1317,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -1241,7 +1353,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:10:28 GMT"
+											"value": "Tue, 23 Dec 2025 23:42:15 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -1272,7 +1384,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "1"
+											"value": "2"
 										}
 									]
 								},
@@ -1280,7 +1392,7 @@
 							},
 							"response": [
 								{
-									"name": "Find Doctor Consultation",
+									"name": "Find Doctor Consultations",
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
@@ -1305,7 +1417,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -1341,7 +1453,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:11:57 GMT"
+											"value": "Tue, 23 Dec 2025 23:42:27 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -1349,7 +1461,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "[\n    {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 2,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 3,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-25T19:00:00\"\n    }\n]"
+									"body": "[\n    {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-25T19:00:00\"\n    }\n]"
 								}
 							]
 						},
@@ -1407,7 +1519,7 @@
 									},
 									"status": "Created",
 									"code": 201,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -1443,7 +1555,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:13:10 GMT"
+											"value": "Tue, 23 Dec 2025 23:42:39 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -1523,7 +1635,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -1559,7 +1671,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:13:51 GMT"
+											"value": "Tue, 23 Dec 2025 23:42:45 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -1624,7 +1736,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -1660,7 +1772,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:15:04 GMT"
+											"value": "Tue, 23 Dec 2025 23:42:56 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -1668,7 +1780,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "[\n    {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 2,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Completado\",\n        \"startDateTime\": \"2025-12-25T19:00:00\"\n    },\n    {\n        \"id\": 3,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-25T19:00:00\"\n    }\n]"
+									"body": "[\n    {\n        \"id\": 1,\n        \"doctorName\": \"Henrique Paoletti\",\n        \"patientCpf\": \"00875560067\",\n        \"specialty\": \"Cardiologia\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-25T19:00:00\"\n    }\n]"
 								}
 							]
 						},
@@ -1735,14 +1847,14 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "3"
+													"value": "1"
 												}
 											]
 										}
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -1778,7 +1890,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:15:56 GMT"
+											"value": "Tue, 23 Dec 2025 23:43:04 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -1786,7 +1898,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"diseaseName\": \"COVID-19\",\n    \"requireExam\": true,\n    \"examId\": 4,\n    \"examName\": \"Teste de COVID\",\n    \"message\": \"Solicitação de exame cadastrada. Utilize o ID para agendar o horário em nosso sistema.\"\n}"
+									"body": "{\n    \"diseaseName\": \"COVID-19\",\n    \"requireExam\": true,\n    \"examId\": 2,\n    \"examName\": \"Teste de COVID\",\n    \"message\": \"Solicitação de exame cadastrada. Utilize o ID para confirmar o horário em nosso sistema.\"\n}"
 								}
 							]
 						}
@@ -1852,7 +1964,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -1888,7 +2000,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:16:51 GMT"
+											"value": "Tue, 23 Dec 2025 23:43:13 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -1896,7 +2008,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "[\n    {\n        \"examId\": 1,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-26T19:00:00\"\n    },\n    {\n        \"examId\": 2,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Cancelado\",\n        \"startDateTime\": null\n    },\n    {\n        \"examId\": 3,\n        \"procedureName\": \"Ultrassom\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-05-25T19:00:00\"\n    },\n    {\n        \"examId\": 4,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Criado\",\n        \"startDateTime\": null\n    }\n]"
+									"body": "[\n    {\n        \"examId\": 1,\n        \"procedureName\": \"Ultrassom\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Agendado\",\n        \"startDateTime\": \"2026-06-26T19:00:00\"\n    },\n    {\n        \"examId\": 2,\n        \"procedureName\": \"Teste de COVID\",\n        \"patientCpf\": \"00875560067\",\n        \"status\": \"Criado\",\n        \"startDateTime\": null\n    }\n]"
 								}
 							]
 						},
@@ -1965,14 +2077,14 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "4"
+													"value": "2"
 												}
 											]
 										}
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "Text",
+									"_postman_previewlanguage": "",
 									"header": [
 										{
 											"key": "transfer-encoding",
@@ -2008,7 +2120,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 23 Dec 2025 15:18:17 GMT"
+											"value": "Tue, 23 Dec 2025 23:43:27 GMT"
 										},
 										{
 											"key": "Referrer-Policy",
@@ -2016,7 +2128,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"examId\": 4,\n    \"dateTime\": \"2026-06-27T19:00:00\",\n    \"message\": \"Teste de COVID para o CPF 00875560067 foi agendado para 27/06/2026 às 19:00\"\n}"
+									"body": "{\n    \"examId\": 2,\n    \"dateTime\": \"2026-06-27T19:00:00\",\n    \"message\": \"Teste de COVID para o CPF 00875560067 foi confirmado para 27/06/2026 às 19:00\"\n}"
 								}
 							]
 						}
