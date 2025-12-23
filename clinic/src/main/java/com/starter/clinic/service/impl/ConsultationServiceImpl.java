@@ -103,6 +103,10 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada."));
 
+        if (consultation.getStatus() == ConsultationStatus.COMPLETED || consultation.getStatus() == ConsultationStatus.CANCELLED) {
+            throw new ConflictException("Consulta foi cancelada ou já foi concluída.");
+        }
+
         List<Doctor> availableDoctors = getAvailableDoctors(consultation.getSpecialty(), request.dateTime());
 
         if (availableDoctors.isEmpty()) {
@@ -133,8 +137,8 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada."));
 
-        if (consultation.getStatus().equals(ConsultationStatus.COMPLETED)) {
-            throw new ConflictException("Consulta já foi concluída.");
+        if (consultation.getStatus().equals(ConsultationStatus.COMPLETED) || consultation.getStatus().equals(ConsultationStatus.CANCELLED)) {
+            throw new ConflictException("Consulta foi cancelada ou já foi concluída.");
         }
 
         if (!consultation.getPatientCpf().equals(request.patientCpf())) {

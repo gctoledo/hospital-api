@@ -73,7 +73,6 @@ public class DiagnoseServiceImpl implements DiagnoseService {
         }
 
         return new DiagnoseResult(
-                disease.getId(),
                 disease.getName(),
                 requireExam,
                 examId,

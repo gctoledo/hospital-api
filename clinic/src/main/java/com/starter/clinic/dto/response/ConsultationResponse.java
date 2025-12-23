@@ -8,7 +8,6 @@ public record ConsultationResponse(
         String patientCpf,
         String specialty,
         String status,
-        LocalDateTime startDateTime,
-        LocalDateTime endDateTime
+        LocalDateTime startDateTime
 ) {
 }

@@ -14,8 +14,7 @@ public class ConsultationMapper {
                 consultation.getPatientCpf(),
                 consultation.getSpecialty().getValue(),
                 consultation.getStatus().getValue(),
-                consultation.getStartDateTime(),
-                consultation.getEndDateTime()
+                consultation.getStartDateTime()
         );
     }
 
