@@ -107,7 +107,7 @@ public class ExamServiceImpl implements ExamService {
                 exam.getId(),
                 exam.getStartDateTime(),
                 String.format(
-                        "%s para o CPF %s foi agendado para %s",
+                        "%s para o CPF %s foi confirmado para %s",
                         procedure.getName(),
                         exam.getPatientCpf(),
                         DateFormatter.format(exam.getStartDateTime())
